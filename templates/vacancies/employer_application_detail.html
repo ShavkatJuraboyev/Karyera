@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block title %}Ariza{% endblock %}
+{% block content %}
+<div class="container">
+  <a class="crumb" href="{% url 'vacancies:employer_vacancy_applications' application.vacancy.pk %}"><i class="bi bi-chevron-left"></i>Arizalar ro'yxati</a>
+  <div class="page-head"><div><h1>{{ application.applicant.full_name }}</h1><p>{{ application.vacancy.title }}, yuborilgan: {{ application.created_at|date:"d.m.Y H:i" }}</p></div>
+    <div class="actions"><span class="badge text-bg-{{ application.status_badge }} fs-6">{{ application.get_status_display }}</span></div></div>
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="panel panel-pad profile-summary mb-3"><dl>
+        <div><dt>Telefon</dt><dd>{{ application.applicant.phone|default:"—" }}</dd></div>
+        <div><dt>E-mail</dt><dd>{{ application.applicant.email|default:"—" }}</dd></div>
+        {% if profile %}<div><dt>Fakultet</dt><dd>{{ profile.faculty|default:"—" }}</dd></div><div><dt>Yo'nalish</dt><dd>{{ profile.direction|default:"—" }}</dd></div><div><dt>Maqsad</dt><dd>{{ profile.desired_position|default:"—" }}</dd></div>{% endif %}
+      </dl></div>
+      {% if application.cover_letter %}<div class="panel panel-pad mb-3"><h2 class="h6">Qo'shimcha xat</h2><div class="pre-wrap">{{ application.cover_letter }}</div></div>{% endif %}
+      {% if can_see_cv %}<a class="btn btn-brand" href="{% url 'students:cv_other' profile.pk %}"><i class="bi bi-file-earmark-person me-1"></i>Rezyumeni ochish</a>
+        <a class="btn btn-outline-secondary" href="{% url 'students:cv_pdf_other' profile.pk %}"><i class="bi bi-file-earmark-pdf me-1"></i>PDF</a>{% endif %}
+    </div>
+    <div class="col-lg-5">
+      {% if can_update %}
+      <div class="panel panel-pad"><h2 class="h5 mb-3">Holatni o'zgartirish</h2>
+        <form method="post" novalidate>{% csrf_token %}{% include "includes/form_fields.html" %}<button class="btn btn-brand w-100" type="submit">Saqlash va nomzodga xabar berish</button></form></div>
+      {% else %}<div class="alert alert-secondary">Nomzod arizani bekor qilgan.</div>{% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

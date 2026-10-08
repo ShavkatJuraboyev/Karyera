@@ -1,0 +1,181 @@
+{% load static karyera_tags %}<!DOCTYPE html>
+<html lang="uz" data-bs-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Karyera SIES{% endblock %} — Karyera SIES</title>
+  {% include "includes/head_assets.html" %}
+  {% block extra_head %}{% endblock %}
+</head>
+<body>
+{% include "includes/brand_symbol.html" %}
+<a class="skip-link" href="#main">Asosiy mazmunga o'tish</a>
+
+{% if user.is_authenticated %}
+<div class="shell">
+  <aside class="sidebar offcanvas-lg offcanvas-start" tabindex="-1" id="sidebar" aria-label="Asosiy menyu">
+    <div class="sidebar-inner">
+      <a class="sb-brand" href="{% url 'core:home' %}">
+        <svg class="brand-mark" aria-hidden="true"><use href="#brand-mark"/></svg>
+        <span><b>Karyera SIES</b><small>Samarqand iqtisodiyot va servis instituti</small></span>
+      </a>
+      <nav class="sb-nav">
+        <a class="sb-link {% nav_active '/' %}" href="{% url 'core:home' %}"><i class="bi bi-house-door"></i>Bosh sahifa</a>
+
+        {% if user.is_candidate %}
+        <div class="sb-group">
+          <div class="sb-title">Mening kabinetim</div>
+          <a class="sb-link {% nav_active '/kabinet/profil/' %}" href="{% url 'students:profile' %}"><i class="bi bi-person-vcard"></i>Profil</a>
+          <a class="sb-link {% nav_active '/kabinet/cv/' %}" href="{% url 'students:cv' %}"><i class="bi bi-file-earmark-person"></i>Rezyume (CV)</a>
+          <a class="sb-link {% nav_active '/kabinet/arizalar/' %}" href="{% url 'vacancies:my_applications' %}"><i class="bi bi-send-check"></i>Arizalarim</a>
+          <a class="sb-link {% nav_active '/kabinet/tadbirlarim/' %}" href="{% url 'events:mine' %}"><i class="bi bi-calendar-check"></i>Tadbirlarim</a>
+        </div>
+        {% elif user.is_employer %}
+        <div class="sb-group">
+          <div class="sb-title">Tashkilot kabineti</div>
+          <a class="sb-link {% nav_active '/ish-beruvchi/' exact=True %}" href="{% url 'employers:dashboard' %}"><i class="bi bi-speedometer2"></i>Boshqaruv paneli</a>
+          <a class="sb-link {% nav_active '/ish-beruvchi/vakansiyalar/' %}" href="{% url 'vacancies:employer_list' %}"><i class="bi bi-briefcase"></i>Vakansiyalarim</a>
+          <a class="sb-link {% nav_active '/ish-beruvchi/arizalar/' %}" href="{% url 'vacancies:employer_applications' %}"><i class="bi bi-inbox"></i>Arizalar</a>
+          <a class="sb-link {% nav_active '/ish-beruvchi/profil/' %}" href="{% url 'employers:profile_edit' %}"><i class="bi bi-building"></i>Tashkilot profili</a>
+          <a class="sb-link {% nav_active '/kabinet/tadbirlarim/' %}" href="{% url 'events:mine' %}"><i class="bi bi-calendar-check"></i>Tadbirlarim</a>
+        </div>
+        {% endif %}
+
+        {% if user.can_view_analytics %}
+        <div class="sb-group">
+          <div class="sb-title">Tahlil</div>
+          <a class="sb-link {% nav_active '/dashboard/' %}" href="{% url 'reports:dashboard' %}"><i class="bi bi-bar-chart-line"></i>Dashboard</a>
+          <a class="sb-link {% nav_active '/monitoring/' %}" href="{% url 'students:monitor_list' %}"><i class="bi bi-people"></i>Monitoring</a>
+          <a class="sb-link {% nav_active '/hisobotlar/' %}" href="{% url 'reports:index' %}"><i class="bi bi-file-earmark-bar-graph"></i>Hisobotlar</a>
+        </div>
+        {% endif %}
+
+        {% if user.is_career_staff %}
+        <div class="sb-group">
+          <div class="sb-title">Karyera markazi</div>
+          <a class="sb-link {% nav_active '/boshqaruv/vakansiyalar/' %}" href="{% url 'vacancies:manage_list' %}"><i class="bi bi-patch-check"></i>Vakansiyalar moderatsiyasi</a>
+          <a class="sb-link {% nav_active '/boshqaruv/ish-beruvchilar/' %}" href="{% url 'employers:manage_list' %}"><i class="bi bi-buildings"></i>Ish beruvchilar bazasi</a>
+          <a class="sb-link {% nav_active '/boshqaruv/tadbirlar/' %}" href="{% url 'events:manage_list' %}"><i class="bi bi-calendar-event"></i>Tadbirlarni boshqarish</a>
+          <a class="sb-link {% nav_active '/boshqaruv/yangiliklar/' %}" href="{% url 'core:news_manage_list' %}"><i class="bi bi-megaphone"></i>Yangiliklar</a>
+          <a class="sb-link {% nav_active '/boshqaruv/fakultetlar/' %}" href="{% url 'core:faculty_list' %}"><i class="bi bi-diagram-3"></i>Fakultetlar</a>
+          <a class="sb-link {% nav_active '/boshqaruv/yonalishlar/' %}" href="{% url 'core:direction_list' %}"><i class="bi bi-journal-bookmark"></i>Ta'lim yo'nalishlari</a>
+        </div>
+        {% endif %}
+
+        {% if user.role == Role.ADMIN %}
+        <div class="sb-group">
+          <div class="sb-title">Tizim</div>
+          <a class="sb-link {% nav_active '/hisob/foydalanuvchilar/' %}" href="{% url 'accounts:user_list' %}"><i class="bi bi-shield-lock"></i>Foydalanuvchilar va rollar</a>
+          <a class="sb-link {% nav_active '/boshqaruv/audit/' %}" href="{% url 'core:audit_list' %}"><i class="bi bi-journal-text"></i>Audit jurnali</a>
+          <a class="sb-link" href="/admin/"><i class="bi bi-gear"></i>Django admin</a>
+        </div>
+        {% endif %}
+
+        <div class="sb-group">
+          <div class="sb-title">Platforma</div>
+          <a class="sb-link {% nav_active '/vakansiyalar/' %}" href="{% url 'vacancies:list' %}"><i class="bi bi-search"></i>Vakansiyalar</a>
+          <a class="sb-link {% nav_active '/ish-beruvchilar/' %}" href="{% url 'employers:public_list' %}"><i class="bi bi-building"></i>Ish beruvchilar</a>
+          <a class="sb-link {% nav_active '/tadbirlar/' %}" href="{% url 'events:list' %}"><i class="bi bi-calendar3"></i>Tadbirlar</a>
+          <a class="sb-link {% nav_active '/yangiliklar/' %}" href="{% url 'core:news_list' %}"><i class="bi bi-newspaper"></i>Yangiliklar</a>
+        </div>
+      </nav>
+      <div class="sb-foot">
+        <span class="avatar-sm" aria-hidden="true">{{ user|initials }}</span>
+        <a class="who text-decoration-none" href="{% url 'accounts:profile' %}" title="Shaxsiy ma'lumotlar">
+          <b class="truncate">{{ user.short_name }}</b><span>{{ user.get_role_display }}</span>
+        </a>
+        <form method="post" action="{% url 'accounts:logout' %}">{% csrf_token %}
+          <button class="icon-btn btn-ghost" type="submit" title="Chiqish" aria-label="Tizimdan chiqish" style="color:#c8d4f2"><i class="bi bi-box-arrow-right"></i></button>
+        </form>
+      </div>
+    </div>
+  </aside>
+
+  <div class="shell-main">
+    <header class="topbar">
+      <button class="icon-btn d-lg-none" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebar" aria-controls="sidebar" aria-label="Menyuni ochish"><i class="bi bi-list" style="font-size:1.5rem"></i></button>
+      <form class="search" action="{% url 'vacancies:list' %}" method="get" role="search">
+        <i class="bi bi-search" aria-hidden="true"></i>
+        <input class="form-control" type="search" name="q" placeholder="Vakansiya qidirish" aria-label="Vakansiya qidirish" autocomplete="off">
+      </form>
+      <div class="ms-auto d-flex align-items-center gap-1">
+        <button class="icon-btn" type="button" data-theme-toggle aria-label="Mavzuni almashtirish" title="Yorug' / qorong'i rejim">
+          <i class="bi bi-moon-stars theme-icon-light"></i><i class="bi bi-sun theme-icon-dark"></i>
+        </button>
+        <a class="icon-btn" href="{% url 'core:notifications' %}" aria-label="Bildirishnomalar{% if unread_notifications %} ({{ unread_notifications }} ta yangi){% endif %}" title="Bildirishnomalar">
+          <i class="bi bi-bell"></i>{% if unread_notifications %}<span class="dot">{{ unread_notifications }}</span>{% endif %}
+        </a>
+      </div>
+    </header>
+    <main id="main" class="shell-body" tabindex="-1">
+
+{% else %}
+<header class="site-header">
+  <div class="container inner">
+    <a class="site-brand" href="{% url 'core:home' %}">
+      <svg class="brand-mark" aria-hidden="true"><use href="#brand-mark"/></svg>
+      <span><b>Karyera SIES</b><small>Samarqand iqtisodiyot va servis instituti</small></span>
+    </a>
+    <nav class="site-nav" aria-label="Asosiy menyu">
+      <a class="{% nav_active '/vakansiyalar/' %}" href="{% url 'vacancies:list' %}">Vakansiyalar</a>
+      <a class="{% nav_active '/ish-beruvchilar/' %}" href="{% url 'employers:public_list' %}">Ish beruvchilar</a>
+      <a class="{% nav_active '/tadbirlar/' %}" href="{% url 'events:list' %}">Tadbirlar</a>
+      <a class="{% nav_active '/yangiliklar/' %}" href="{% url 'core:news_list' %}">Yangiliklar</a>
+    </nav>
+    <div class="ms-auto d-flex align-items-center gap-2">
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Mavzuni almashtirish" title="Yorug' / qorong'i rejim">
+        <i class="bi bi-moon-stars theme-icon-light"></i><i class="bi bi-sun theme-icon-dark"></i>
+      </button>
+      <a class="btn btn-outline-light btn-sm d-none d-sm-inline-block" href="{% url 'accounts:login' %}">Kirish</a>
+      <a class="btn btn-light btn-sm" href="{% url 'accounts:register' %}">Ro'yxatdan o'tish</a>
+      <button class="icon-btn d-lg-none" type="button" data-bs-toggle="collapse" data-bs-target="#mobileNav" aria-controls="mobileNav" aria-label="Menyuni ochish"><i class="bi bi-list" style="font-size:1.5rem"></i></button>
+    </div>
+  </div>
+  <div class="collapse d-lg-none" id="mobileNav">
+    <div class="mobile-nav">
+      <a href="{% url 'vacancies:list' %}">Vakansiyalar</a>
+      <a href="{% url 'employers:public_list' %}">Ish beruvchilar</a>
+      <a href="{% url 'events:list' %}">Tadbirlar</a>
+      <a href="{% url 'core:news_list' %}">Yangiliklar</a>
+      <a href="{% url 'accounts:login' %}">Kirish</a>
+    </div>
+  </div>
+</header>
+
+<main id="main" class="public-body" tabindex="-1">
+{% endif %}
+
+{% block content %}{% endblock %}
+
+{% if user.is_authenticated %}
+    </main>
+    <footer class="shell-foot">© {% now "Y" %} Samarqand iqtisodiyot va servis instituti, Karyera markazi</footer>
+  </div>
+</div>
+{% else %}
+</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="row g-4">
+      <div class="col-lg-5">
+        <div class="site-brand mb-3"><svg class="brand-mark" aria-hidden="true"><use href="#brand-mark"/></svg><span><b>Karyera SIES</b></span></div>
+        <p style="max-width:42ch">Samarqand iqtisodiyot va servis instituti talabalari, bitiruvchilari va ish beruvchilarini bog'lovchi yagona karyera platformasi.</p>
+      </div>
+      <div class="col-6 col-lg-3"><h3>Platforma</h3><ul>
+        <li><a href="{% url 'vacancies:list' %}">Vakansiyalar</a></li><li><a href="{% url 'employers:public_list' %}">Ish beruvchilar</a></li>
+        <li><a href="{% url 'events:list' %}">Tadbirlar</a></li><li><a href="{% url 'core:news_list' %}">Yangiliklar</a></li></ul></div>
+      <div class="col-6 col-lg-4"><h3>Hisob</h3><ul>
+        <li><a href="{% url 'accounts:login' %}">Kirish</a></li><li><a href="{% url 'accounts:register' %}">Talaba yoki bitiruvchi sifatida ro'yxatdan o'tish</a></li>
+        <li><a href="{% url 'accounts:register_employer' %}">Ish beruvchi sifatida ro'yxatdan o'tish</a></li></ul></div>
+    </div>
+    <div class="legal">© {% now "Y" %} Samarqand iqtisodiyot va servis instituti, Karyera markazi</div>
+  </div>
+</footer>
+{% endif %}
+
+{% include "includes/flash.html" %}
+<script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/app.js' %}"></script>
+{% block extra_js %}{% endblock %}
+</body>
+</html>

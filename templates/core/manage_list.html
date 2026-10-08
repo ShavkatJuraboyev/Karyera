@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% load karyera_tags %}
+{% block title %}{{ title }}{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>{{ title }}</h1></div><div class="actions"><a class="btn btn-brand" href="{{ create_url }}"><i class="bi bi-plus-lg me-1"></i>Qo'shish</a></div></div>
+{% if has_search %}
+<form class="filter-bar row g-2" method="get"><div class="col-md-6"><input class="form-control" name="q" value="{{ q }}" placeholder="Qidirish" aria-label="Qidirish"></div>
+  <div class="col-md-2"><button class="btn btn-brand w-100">Qidirish</button></div></form>{% endif %}
+<div class="panel"><div class="table-responsive"><table class="table table-hover">
+  <thead><tr>{% for label, _ in columns %}<th>{{ label }}</th>{% endfor %}<th></th></tr></thead>
+  <tbody>
+  {% for obj in page %}
+    <tr>{% for _, a in columns %}<td>{{ obj|attr:a }}</td>{% endfor %}
+      <td class="text-end text-nowrap">
+        {% for label, url_name, arg in extra_links %}<a class="btn btn-sm btn-outline-secondary" href="{% url url_name obj.pk %}">{{ label }}</a> {% endfor %}
+        <a class="btn btn-sm btn-outline-primary" href="{% url edit_name obj.pk %}">Tahrirlash</a>
+        <a class="btn btn-sm btn-outline-danger" href="{% url delete_name obj.pk %}">O'chirish</a></td></tr>
+  {% empty %}<tr><td colspan="{{ columns|length|add:1 }}">{% include "includes/empty.html" with title="Hali ma'lumot yo'q" text="Birinchi yozuvni qo'shing." url=create_url action="Qo'shish" %}</td></tr>{% endfor %}
+  </tbody></table></div></div>
+{% include "includes/pagination.html" %}
+{% endblock %}

@@ -1,0 +1,75 @@
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Dashboard</h1><p>{% if scope %}{{ scope }} bo'yicha ko'rsatkichlar.{% else %}Butun institut bo'yicha ko'rsatkichlar.{% endif %}</p></div>
+  <div class="actions"><a class="btn btn-outline-secondary" href="{% url 'reports:index' %}"><i class="bi bi-file-earmark-bar-graph me-1"></i>Hisobotlar</a></div></div>
+
+{% if user.is_career_staff and d.vacancies_pending or user.is_career_staff and d.employers_pending %}
+<div class="alert alert-warning d-flex flex-wrap align-items-center gap-3">
+  <i class="bi bi-bell-fill"></i><div class="flex-grow-1"><b>Sizning e'tiboringizni kutmoqda:</b>
+    {% if d.vacancies_pending %}<a class="ms-2" href="{% url 'vacancies:manage_list' %}">{{ d.vacancies_pending }} ta vakansiya moderatsiyada</a>{% endif %}
+    {% if d.employers_pending %}<a class="ms-3" href="{% url 'employers:manage_list' %}?status=pending">{{ d.employers_pending }} ta tashkilot tasdiq kutmoqda</a>{% endif %}</div>
+</div>{% endif %}
+
+<div class="kpis mb-3">
+  <div class="kpi"><div class="kpi-label">Talabalar</div><div class="kpi-value">{{ d.students_total }}</div></div>
+  <div class="kpi"><div class="kpi-label">Bitiruvchilar</div><div class="kpi-value">{{ d.graduates_total }}</div><div class="kpi-note">Ish izlayotganlar: {{ d.looking }}</div></div>
+  <div class="kpi"><div class="kpi-label">Ishga joylashgan bitiruvchilar</div><div class="kpi-value">{{ d.hired }}</div><div class="kpi-note">Bandlik darajasi: {{ d.employment_rate }}%</div><div class="progress" role="progressbar" aria-valuenow="{{ d.employment_rate }}" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar" style="width:{{ d.employment_rate }}%"></div></div></div>
+  <div class="kpi"><div class="kpi-label">Faol vakansiyalar</div><div class="kpi-value">{{ d.vacancies_active }}</div><div class="kpi-note">Ish beruvchilar: {{ d.employers_total }}</div></div>
+</div>
+<div class="kpis mb-4">
+  <div class="kpi"><div class="kpi-label">Arizalar</div><div class="kpi-value">{{ d.applications_total }}</div><div class="kpi-note">Yangi: {{ d.applications_new }}</div></div>
+  <div class="kpi"><div class="kpi-label">Suhbatga taklif</div><div class="kpi-value">{{ d.interviews }}</div></div>
+  <div class="kpi"><div class="kpi-label">Qabul qilinganlar</div><div class="kpi-value">{{ d.accepted }}</div></div>
+  <div class="kpi"><div class="kpi-label">Tadbirlar</div><div class="kpi-value">{{ d.events_upcoming }}<small>kelgusi</small></div><div class="kpi-note">Ro'yxatdan o'tgan: {{ d.registrations_total }}, qatnashgan: {{ d.attended_total }}</div></div>
+</div>
+
+<div class="row g-3">
+  <div class="col-12"><div class="panel"><div class="panel-head"><h2>Oxirgi 12 oy dinamikasi</h2></div><div class="panel-pad"><div class="chart-box"><canvas id="monthlyChart" role="img" aria-label="Oxirgi 12 oy dinamikasi grafigi"></canvas></div></div></div></div>
+  <div class="col-lg-6"><div class="panel"><div class="panel-head"><h2>Bitiruvchilar bandlik holati</h2></div><div class="panel-pad"><div class="chart-box"><canvas id="statusChart" role="img" aria-label="Bandlik holati diagrammasi"></canvas></div></div></div></div>
+  <div class="col-lg-6"><div class="panel"><div class="panel-head"><h2>Fakultetlar kesimida bandlik, %</h2></div><div class="panel-pad"><div class="chart-box"><canvas id="facultyChart" role="img" aria-label="Fakultetlar bandligi grafigi"></canvas></div></div></div></div>
+  <div class="col-lg-6"><div class="panel"><div class="panel-head"><h2>Ariza holatlari</h2></div><div class="panel-pad"><div class="chart-box"><canvas id="appChart" role="img" aria-label="Ariza holatlari diagrammasi"></canvas></div></div></div></div>
+</div>
+{{ d.status_chart|json_script:"status-data" }}
+{{ d.faculty_chart|json_script:"faculty-data" }}
+{{ d.monthly|json_script:"monthly-data" }}
+{{ d.app_chart|json_script:"app-data" }}
+{% endblock %}
+{% block extra_js %}
+{% load static %}
+<script src="{% static 'vendor/chartjs/chart.umd.min.js' %}"></script>
+<script>
+(function () {
+  if (typeof Chart === "undefined") return;
+  var css = function (n) { return getComputedStyle(document.documentElement).getPropertyValue(n).trim(); };
+  var data = function (id) { return JSON.parse(document.getElementById(id).textContent); };
+  var charts = [];
+  /* bandlik: aniqlanmagan, izlayapti, joylashgan, o'zini band qilgan, o'qiyapti, izlamayapti */
+  function statusColors() { return [css("--line-strong"), css("--primary"), css("--turq"), "#7fd3cf", css("--saffron"), css("--faint")]; }
+  /* ariza: yuborildi, ko'rilmoqda, suhbat, qabul, rad, bekor */
+  function appColors() { return [css("--primary"), "#6b8ccf", css("--saffron"), css("--turq"), "#d9695f", css("--faint")]; }
+  function base() {
+    Chart.defaults.font.family = css("--font-ui");
+    Chart.defaults.color = css("--muted");
+    Chart.defaults.borderColor = css("--line");
+  }
+  function build() {
+    charts.forEach(function (c) { c.destroy(); }); charts = [];
+    base();
+        var s = data("status-data");
+    charts.push(new Chart(document.getElementById("statusChart"), { type: "doughnut", data: { labels: s.labels, datasets: [{ data: s.data, backgroundColor: statusColors(), borderColor: css("--surface"), borderWidth: 3 }] }, options: { maintainAspectRatio: false, cutout: "62%", plugins: { legend: { position: "right", labels: { boxWidth: 10, boxHeight: 10, usePointStyle: true } } } } }));
+    var f = data("faculty-data");
+    charts.push(new Chart(document.getElementById("facultyChart"), { type: "bar", data: { labels: f.labels, datasets: [{ label: "Bandlik, %", data: f.data, backgroundColor: css("--primary"), borderRadius: 6, maxBarThickness: 44 }] }, options: { maintainAspectRatio: false, scales: { y: { beginAtZero: true, max: 100, grid: { color: css("--line") } }, x: { grid: { display: false } } }, plugins: { legend: { display: false } } } }));
+    var m = data("monthly-data");
+    var ds = [{ label: "Ishga joylashganlar", data: m.employed, borderColor: css("--turq"), backgroundColor: css("--turq"), tension: .35, pointRadius: 3 },
+              { label: "Arizalar", data: m.applications, borderColor: css("--primary"), backgroundColor: css("--primary"), tension: .35, pointRadius: 3 }];
+    if (m.vacancies) ds.push({ label: "Yangi vakansiyalar", data: m.vacancies, borderColor: css("--saffron"), backgroundColor: css("--saffron"), tension: .35, pointRadius: 3 });
+    charts.push(new Chart(document.getElementById("monthlyChart"), { type: "line", data: { labels: m.labels, datasets: ds }, options: { maintainAspectRatio: false, interaction: { mode: "index", intersect: false }, scales: { y: { beginAtZero: true, ticks: { precision: 0 }, grid: { color: css("--line") } }, x: { grid: { display: false } } }, plugins: { legend: { labels: { usePointStyle: true, boxWidth: 8, boxHeight: 8 } } } } }));
+    var a = data("app-data");
+    charts.push(new Chart(document.getElementById("appChart"), { type: "doughnut", data: { labels: a.labels, datasets: [{ data: a.data, backgroundColor: appColors(), borderColor: css("--surface"), borderWidth: 3 }] }, options: { maintainAspectRatio: false, cutout: "62%", plugins: { legend: { position: "right", labels: { boxWidth: 10, boxHeight: 10, usePointStyle: true } } } } }));
+  }
+  build();
+  document.addEventListener("themechange", build);
+})();
+</script>
+{% endblock %}

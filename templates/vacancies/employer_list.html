@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}Vakansiyalarim{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Vakansiyalarim</h1><p>Yaratilgan vakansiyalar va ularning holati.</p></div>
+  <div class="actions">{% if employer.is_approved %}<a class="btn btn-brand" href="{% url 'vacancies:employer_create' %}"><i class="bi bi-plus-lg me-1"></i>Yangi vakansiya</a>{% endif %}</div></div>
+{% if not employer.is_approved %}<div class="alert alert-warning">Tashkilotingiz tasdiqlanmaguncha vakansiya joylashtira olmaysiz.</div>{% endif %}
+<div class="d-flex flex-wrap gap-2 mb-3">
+  <a class="btn btn-sm {% if not status %}btn-brand{% else %}btn-outline-secondary{% endif %}" href="?">Barchasi</a>
+  {% for v, l in statuses %}<a class="btn btn-sm {% if status == v %}btn-brand{% else %}btn-outline-secondary{% endif %}" href="?status={{ v }}">{{ l }}</a>{% endfor %}
+</div>
+<div class="panel"><div class="table-responsive"><table class="table table-hover">
+  <thead><tr><th>Lavozim</th><th>Holati</th><th>Muddat</th><th>Arizalar</th><th></th></tr></thead><tbody>
+  {% for v in page %}
+    <tr><td><a class="text-decoration-none fw-medium" href="{{ v.get_absolute_url }}">{{ v.title }}</a>{% if v.status == 'rejected' and v.moderation_comment %}<div class="small text-danger mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ v.moderation_comment }}</div>{% endif %}</td>
+      <td><span class="badge text-bg-{{ v.status_badge }}">{{ v.get_status_display }}</span></td><td>{{ v.deadline|date:"d.m.Y" }}</td>
+      <td><a class="text-decoration-none fw-medium" href="{% url 'vacancies:employer_vacancy_applications' v.pk %}">{{ v.app_count }}</a></td>
+      <td class="text-end text-nowrap">
+        <a class="btn btn-sm btn-outline-primary" href="{% url 'vacancies:employer_edit' v.pk %}">Tahrirlash</a>
+        {% if v.status == 'published' or v.status == 'pending' %}<form class="d-inline" method="post" action="{% url 'vacancies:employer_close' v.pk %}" data-confirm="Vakansiyani yopasizmi?">{% csrf_token %}<button class="btn btn-sm btn-outline-secondary">Yopish</button></form>{% endif %}
+        {% if v.status == 'draft' or v.status == 'rejected' %}<form class="d-inline" method="post" action="{% url 'vacancies:employer_delete' v.pk %}" data-confirm="Vakansiyani o'chirasizmi?">{% csrf_token %}<button class="btn btn-sm btn-outline-danger">O'chirish</button></form>{% endif %}
+      </td></tr>
+  {% empty %}<tr><td colspan="5">{% include "includes/empty.html" with title="Hozircha vakansiya yo'q" text="Birinchi vakansiyangizni yarating, tasdiqlangach talabalarga ko'rinadi." %}</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% include "includes/pagination.html" %}
+{% endblock %}

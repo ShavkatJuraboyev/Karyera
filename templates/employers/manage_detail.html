@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% block title %}{{ employer.name }}{% endblock %}
+{% block content %}
+<div class="container">
+  <a class="crumb" href="{% url 'employers:manage_list' %}"><i class="bi bi-chevron-left"></i>Ish beruvchilar bazasi</a>
+  <div class="page-head"><div><h1>{{ employer.name }}</h1><p><span class="badge text-bg-{{ employer.status_badge }}">{{ employer.get_status_display }}</span></p></div></div>
+  <div class="kpis mb-4">
+    <div class="kpi"><div class="kpi-label">Vakansiyalar</div><div class="kpi-value">{{ stats.vacancies }}</div></div>
+    <div class="kpi"><div class="kpi-label">Arizalar</div><div class="kpi-value">{{ stats.applications }}</div></div>
+    <div class="kpi"><div class="kpi-label">Suhbatlar</div><div class="kpi-value">{{ stats.interviews }}</div></div>
+    <div class="kpi"><div class="kpi-label">Qabul qilinganlar</div><div class="kpi-value">{{ stats.accepted }}</div></div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-7">
+      <div class="panel panel-pad profile-summary mb-3"><dl>
+        <div><dt>STIR</dt><dd class="tabular">{{ employer.stir }}</dd></div>
+        <div><dt>Faoliyat sohasi</dt><dd>{{ employer.industry }}</dd></div>
+        <div><dt>Manzil</dt><dd>{{ employer.region }}, {{ employer.address }}</dd></div>
+        <div><dt>Telefon</dt><dd>{{ employer.phone }}</dd></div>
+        <div><dt>E-mail</dt><dd>{{ employer.email }}</dd></div>
+        <div><dt>Veb-sayt</dt><dd>{{ employer.website|default:"—" }}</dd></div>
+        <div><dt>Mas'ul shaxs</dt><dd>{{ employer.contact_name }}{% if employer.contact_position %}, {{ employer.contact_position }}{% endif %}<div class="text-muted small">{{ employer.contact_phone }}</div></dd></div>
+        <div><dt>Ro'yxatdan o'tgan</dt><dd>{{ employer.created_at|date:"d.m.Y H:i" }}</dd></div></dl></div>
+      <div class="panel mb-3"><div class="panel-head"><h2>Vakansiyalar</h2></div>
+        <ul class="rowlist">{% for v in vacancies %}<a href="{% url 'vacancies:manage_detail' v.pk %}"><div class="grow"><div class="title">{{ v.title }}</div><div class="sub">Arizalar: {{ v.app_count }}</div></div><span class="badge text-bg-{{ v.status_badge }}">{{ v.get_status_display }}</span></a>{% empty %}<li class="text-muted">Vakansiya yo'q</li>{% endfor %}</ul></div>
+      <div class="panel"><div class="panel-head"><h2>Nomzodlar bilan ishlash tarixi</h2></div>
+        <ul class="rowlist">{% for a in history %}<li><div class="grow"><div class="title">{{ a.applicant.full_name }}</div><div class="sub">{{ a.vacancy.title }}, {{ a.created_at|date:"d.m.Y" }}</div></div><span class="badge text-bg-{{ a.status_badge }}">{{ a.get_status_display }}</span></li>{% empty %}<li class="text-muted">Tarix bo'sh</li>{% endfor %}</ul></div>
+    </div>
+    <div class="col-lg-5"><div class="panel panel-pad sticky-side">
+      <h2 class="h5 mb-3">Holat va hamkorlik</h2>
+      <form method="post" novalidate>{% csrf_token %}{% include "includes/form_fields.html" %}<button class="btn btn-brand w-100" type="submit">Saqlash</button></form>
+    </div></div>
+  </div>
+</div>
+{% endblock %}

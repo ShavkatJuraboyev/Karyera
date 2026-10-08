@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Vakansiyalar{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head"><div><h1>Vakansiyalar</h1><p>Karyera markazi tomonidan tasdiqlangan takliflar.</p></div></div>
+  <div class="row g-4">
+    <div class="col-lg-3">
+      <form class="filter-bar sticky-side" method="get">
+        <div class="field"><label class="form-label" for="f-q">Qidiruv</label><input id="f-q" class="form-control" name="q" value="{{ g.q }}" placeholder="Lavozim yoki tashkilot"></div>
+        <div class="field"><label class="form-label" for="f-d">Ta'lim yo'nalishi</label><select id="f-d" class="form-select" name="direction"><option value="">Barchasi</option>{% for d in directions %}<option value="{{ d.pk }}" {% if g.direction == d.pk|stringformat:"s" %}selected{% endif %}>{{ d.name }}</option>{% endfor %}</select></div>
+        <div class="field"><label class="form-label" for="f-r">Hudud</label><select id="f-r" class="form-select" name="region"><option value="">Barchasi</option>{% for v, l in regions %}<option value="{{ v }}" {% if g.region == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+        <div class="field"><label class="form-label" for="f-t">Ish turi</label><select id="f-t" class="form-select" name="type"><option value="">Barchasi</option>{% for v, l in types %}<option value="{{ v }}" {% if g.type == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+        <div class="field"><label class="form-label" for="f-s">Ish haqi (kamida, so'm)</label><input id="f-s" class="form-control" type="number" min="0" step="100000" name="salary" value="{{ g.salary }}"></div>
+        <div class="field"><label class="form-label" for="f-o">Saralash</label><select id="f-o" class="form-select" name="sort"><option value="new">Yangilari avval</option><option value="salary" {% if g.sort == 'salary' %}selected{% endif %}>Ish haqi bo'yicha</option><option value="deadline" {% if g.sort == 'deadline' %}selected{% endif %}>Muddat bo'yicha</option></select></div>
+        <div class="d-flex gap-2"><button class="btn btn-brand flex-grow-1">Qidirish</button><a class="btn btn-outline-secondary" href="?" title="Filtrlarni tozalash" aria-label="Filtrlarni tozalash"><i class="bi bi-x-lg"></i></a></div>
+      </form>
+    </div>
+    <div class="col-lg-9">
+      <div class="text-muted small mb-3">Topildi: <b class="text-body">{{ page.paginator.count }}</b></div>
+      {% for v in page %}{% include "includes/vacancy_card.html" %}{% empty %}
+        <div class="panel">{% include "includes/empty.html" with title="Mos vakansiya topilmadi" text="Filtrlarni kamaytiring yoki boshqa so'z bilan qidirib ko'ring." url="?" action="Filtrlarni tozalash" %}</div>{% endfor %}
+      {% include "includes/pagination.html" %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Yangiliklar{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head"><div><h1>Yangiliklar va e'lonlar</h1><p>Karyera markazi xabarlari va ish beruvchilar e'lonlari.</p></div></div>
+  <div class="d-flex flex-wrap gap-2 mb-3">
+    <a class="btn btn-sm {% if not category %}btn-brand{% else %}btn-outline-secondary{% endif %}" href="?">Barchasi</a>
+    {% for v, l in categories %}<a class="btn btn-sm {% if category == v %}btn-brand{% else %}btn-outline-secondary{% endif %}" href="?category={{ v }}">{{ l }}</a>{% endfor %}
+  </div>
+  <div class="row g-3">
+  {% for n in page %}
+    <div class="col-md-6 col-xl-4"><div class="card card-hover h-100 position-relative">
+      {% if n.image %}<img src="{{ n.image.url }}" class="card-img-top" alt="" style="height:170px;object-fit:cover">{% endif %}
+      <div class="card-body"><div class="mb-2"><span class="badge text-bg-{{ n.badge }}">{{ n.get_category_display }}</span>{% if n.is_pinned %} <i class="bi bi-pin-angle-fill text-danger ms-1" title="Qadalgan"></i>{% endif %}</div>
+        <h2 class="h6"><a class="text-decoration-none stretched-link text-body" href="{{ n.get_absolute_url }}">{{ n.title }}</a></h2>
+        <p class="text-muted small mb-0">{{ n.body|truncatechars:120 }}</p></div>
+      <div class="card-footer small text-muted">{{ n.published_at|date:"d.m.Y" }}</div>
+    </div></div>
+  {% empty %}<div class="col-12"><div class="panel">{% include "includes/empty.html" with title="Yangiliklar topilmadi" %}</div></div>{% endfor %}
+  </div>
+  {% include "includes/pagination.html" %}
+</div>
+{% endblock %}

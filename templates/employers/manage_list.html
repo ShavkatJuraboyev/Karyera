@@ -1,0 +1,21 @@
+{% extends "base.html" %}
+{% block title %}Ish beruvchilar bazasi{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Ish beruvchilar bazasi</h1><p>Ro'yxatdan o'tgan tashkilotlarni tasdiqlang va hamkorlikni kuzating.</p></div></div>
+<form class="filter-bar row g-2" method="get">
+  <div class="col-md-4"><input class="form-control" name="q" value="{{ q }}" placeholder="Nomi, STIR yoki mas'ul shaxs" aria-label="Qidirish"></div>
+  <div class="col-md-3"><select class="form-select" name="status" aria-label="Holat"><option value="">Barcha holatlar</option>{% for v, l in statuses %}<option value="{{ v }}" {% if v == status %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+  <div class="col-md-3"><select class="form-select" name="coop" aria-label="Hamkorlik"><option value="">Barcha hamkorlik</option>{% for v, l in coops %}<option value="{{ v }}" {% if v == coop %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+  <div class="col-md-2"><button class="btn btn-brand w-100">Qidirish</button></div>
+</form>
+<div class="panel"><div class="table-responsive"><table class="table table-hover">
+  <thead><tr><th>Tashkilot</th><th>STIR</th><th>Mas'ul shaxs</th><th>Vakansiyalar</th><th>Holati</th><th>Hamkorlik</th><th></th></tr></thead><tbody>
+  {% for e in page %}
+    <tr><td><div class="d-flex align-items-center gap-2"><div class="logo-box" style="width:36px;height:36px;font-size:.95rem;border-radius:9px">{{ e.name|slice:":1"|upper }}</div><div><a class="text-decoration-none fw-medium" href="{% url 'employers:manage_detail' e.pk %}">{{ e.name }}</a><div class="small text-muted">{{ e.region }}</div></div></div></td>
+      <td class="tabular">{{ e.stir }}</td><td class="small">{{ e.contact_name }}<div class="text-muted">{{ e.contact_phone }}</div></td><td>{{ e.vacancy_count }}</td>
+      <td><span class="badge text-bg-{{ e.status_badge }}">{{ e.get_status_display }}</span></td><td class="small">{{ e.get_cooperation_display }}</td>
+      <td class="text-end"><a class="btn btn-sm btn-outline-primary" href="{% url 'employers:manage_detail' e.pk %}">Ochish</a></td></tr>
+  {% empty %}<tr><td colspan="7">{% include "includes/empty.html" with title="Tashkilot topilmadi" text="Filtrlarni o'zgartirib ko'ring." %}</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% include "includes/pagination.html" %}
+{% endblock %}

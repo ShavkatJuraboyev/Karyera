@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Profilni tahrirlash{% endblock %}
+{% block content %}
+<div class="container" style="max-width:860px;margin-left:0">
+  <a class="crumb" href="{% url 'students:profile' %}"><i class="bi bi-chevron-left"></i>Profil</a>
+  <div class="page-head"><div><h1>Profilni tahrirlash</h1><p>Rasm va ma'lumotlar rezyumeda ko'rinadi.</p></div></div>
+  <div class="panel panel-pad">
+    <form method="post" enctype="multipart/form-data" novalidate>{% csrf_token %}{% include "includes/form_grid.html" %}
+      <div class="d-flex gap-2 mt-2"><button class="btn btn-brand" type="submit">Saqlash</button><a class="btn btn-outline-secondary" href="{% url 'students:profile' %}">Bekor qilish</a></div>
+    </form>
+  </div>
+</div>
+{% endblock %}

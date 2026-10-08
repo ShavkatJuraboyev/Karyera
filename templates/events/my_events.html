@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Tadbirlarim{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head"><div><h1>Tadbirlarim</h1><p>Ro'yxatdan o'tgan tadbirlaringiz.</p></div><div class="actions"><a class="btn btn-brand" href="{% url 'events:list' %}">Tadbirlarni ko'rish</a></div></div>
+  <div class="panel"><div class="rowlist">
+  {% for r in page %}
+    <a href="{{ r.event.get_absolute_url }}"><div class="date-tile"><div class="m">{{ r.event.start_at|date:"M"|upper }}</div><div class="d">{{ r.event.start_at|date:"d" }}</div></div>
+      <div class="grow"><div class="title">{{ r.event.title }}</div><div class="sub">{{ r.event.start_at|date:"H:i" }}, {{ r.event.location }}</div></div>
+      {% if r.attended %}<span class="badge text-bg-success">Qatnashgan</span>{% elif r.event.is_past %}<span class="badge text-bg-secondary">O'tgan</span>{% else %}<span class="badge text-bg-primary">Kutilmoqda</span>{% endif %}</a>
+  {% empty %}{% include "includes/empty.html" with title="Hali tadbirga yozilmagansiz" text="Yaqin tadbirlarni ko'rib chiqing." url="/tadbirlar/" action="Tadbirlarni ko'rish" %}{% endfor %}
+  </div></div>
+  {% include "includes/pagination.html" %}
+</div>
+{% endblock %}

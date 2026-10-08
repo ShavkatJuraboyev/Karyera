@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}Ishtirokchilar{% endblock %}
+{% block content %}
+<a class="crumb" href="{% url 'events:manage_list' %}"><i class="bi bi-chevron-left"></i>Tadbirlar</a>
+<div class="page-head"><div><h1>{{ event.title }}</h1><p>Ro'yxatdan o'tganlar: {{ regs|length }}. Qatnashganlarni belgilang.</p></div></div>
+<form method="post">{% csrf_token %}
+  <div class="panel"><div class="table-responsive"><table class="table table-hover">
+    <thead><tr><th>#</th><th>Ishtirokchi</th><th>Rol</th><th>Telefon</th><th>Ro'yxatdan o'tgan</th><th class="text-center">Qatnashdi</th></tr></thead><tbody>
+    {% for r in regs %}<tr><td class="tabular">{{ forloop.counter }}</td><td class="fw-medium">{{ r.user.full_name|default:r.user.username }}</td><td>{{ r.user.get_role_display }}</td><td>{{ r.user.phone|default:"—" }}</td>
+      <td>{{ r.created_at|date:"d.m.Y H:i" }}</td><td class="text-center"><input class="form-check-input" type="checkbox" name="attended" value="{{ r.pk }}" aria-label="Qatnashdi" {% if r.attended %}checked{% endif %}></td></tr>
+    {% empty %}<tr><td colspan="6">{% include "includes/empty.html" with title="Hali ro'yxatdan o'tganlar yo'q" %}</td></tr>{% endfor %}
+  </tbody></table></div></div>
+  {% if regs %}<button class="btn btn-brand mt-3" type="submit">Qatnashuvni saqlash</button>{% endif %}
+</form>
+{% endblock %}

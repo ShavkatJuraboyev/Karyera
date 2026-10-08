@@ -1,0 +1,9 @@
+<div class="panel"><div class="table-responsive"><table class="table table-hover">
+  <thead><tr><th>Nomzod</th>{% if show_vacancy %}<th>Vakansiya</th>{% endif %}<th>Topshirilgan</th><th>Holati</th><th></th></tr></thead><tbody>
+  {% for a in page %}
+    <tr><td><div class="d-flex align-items-center gap-2"><span class="avatar-sm">{{ a.applicant.first_name|slice:":1"|upper }}{{ a.applicant.last_name|slice:":1"|upper }}</span><a class="text-decoration-none fw-medium" href="{% url 'vacancies:employer_application' a.pk %}">{{ a.applicant.full_name|default:a.applicant.username }}</a></div></td>
+      {% if show_vacancy %}<td class="small">{{ a.vacancy.title }}</td>{% endif %}
+      <td>{{ a.created_at|date:"d.m.Y H:i" }}</td><td><span class="badge text-bg-{{ a.status_badge }}">{{ a.get_status_display }}</span></td>
+      <td class="text-end"><a class="btn btn-sm btn-outline-primary" href="{% url 'vacancies:employer_application' a.pk %}">Ko'rish</a></td></tr>
+  {% empty %}<tr><td colspan="5">{% include "includes/empty.html" with title="Arizalar yo'q" text="Nomzodlar ariza yuborganda shu yerda ko'rinadi." %}</td></tr>{% endfor %}
+</tbody></table></div></div>

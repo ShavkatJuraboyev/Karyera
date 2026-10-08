@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block title %}Hisobotlar{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Hisobotlar</h1><p>Har bir hisobotni filtrlab, Excel yoki PDF'ga yuklab olishingiz mumkin.</p></div></div>
+<div class="row g-3">
+{% for key, r in items %}
+  <div class="col-md-6"><div class="card card-hover h-100 position-relative"><div class="card-body d-flex gap-3">
+    <span class="avatar-sm" style="width:44px;height:44px;border-radius:12px"><i class="bi bi-file-earmark-bar-graph"></i></span>
+    <div><h2 class="h6 mb-1"><a class="text-decoration-none stretched-link text-body" href="{% url 'reports:report' key %}">{{ r.title }}</a></h2><p class="text-muted small mb-0">{{ r.desc }}</p></div>
+  </div></div></div>
+{% endfor %}
+</div>
+{% endblock %}

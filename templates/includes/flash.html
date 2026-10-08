@@ -1,0 +1,11 @@
+{% if messages %}
+<div class="toast-stack" role="region" aria-label="Xabarlar" aria-live="polite">
+  {% for message in messages %}
+    <div class="toast-lite {{ message.tags }}" role="status">
+      <i class="ti bi {% if message.tags == 'success' %}bi-check-circle-fill{% elif message.tags == 'error' %}bi-exclamation-octagon-fill{% elif message.tags == 'warning' %}bi-exclamation-triangle-fill{% else %}bi-info-circle-fill{% endif %}" aria-hidden="true"></i>
+      <div class="msg">{{ message }}</div>
+      <button type="button" aria-label="Yopish" data-toast-close><i class="bi bi-x-lg"></i></button>
+    </div>
+  {% endfor %}
+</div>
+{% endif %}

@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block title %}{{ employer.name }}{% endblock %}
+{% block content %}
+<div class="container">
+  <a class="crumb" href="{% url 'employers:public_list' %}"><i class="bi bi-chevron-left"></i>Ish beruvchilar</a>
+  <div class="panel panel-pad mb-4">
+    <div class="detail-head">
+      <div class="logo-box">{% if employer.logo %}<img src="{{ employer.logo.url }}" alt="">{% else %}{{ employer.name|slice:":1"|upper }}{% endif %}</div>
+      <div><h1 class="h2 mb-1">{{ employer.name }}</h1>
+        <div class="text-muted">{{ employer.industry }}, {{ employer.region }}</div>
+        <div class="mt-2 d-flex flex-wrap gap-2">
+          {% if employer.cooperation == 'partner' %}<span class="chip is-done"><i class="bi bi-patch-check-fill"></i>Institut hamkori</span>{% endif %}
+          {% if employer.status != 'approved' %}<span class="badge text-bg-{{ employer.status_badge }}">{{ employer.get_status_display }}</span>{% endif %}
+          {% if employer.website %}<a class="chip text-decoration-none" href="{{ employer.website }}" target="_blank" rel="noopener noreferrer"><i class="bi bi-globe2"></i>{{ employer.website }}</a>{% endif %}
+        </div></div>
+    </div>
+    {% if employer.description %}<hr class="my-4"><div class="prose pre-wrap">{{ employer.description }}</div>{% endif %}
+  </div>
+  <h2 class="h4 mb-3">Faol vakansiyalar</h2>
+  {% for v in vacancies %}{% include "includes/vacancy_card.html" %}{% empty %}<div class="panel">{% include "includes/empty.html" with title="Hozircha faol vakansiya yo'q" %}</div>{% endfor %}
+</div>
+{% endblock %}

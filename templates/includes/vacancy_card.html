@@ -1,0 +1,19 @@
+<div class="vrow{% if v.pk in applied_ids %} is-applied{% endif %}">
+  <div class="logo-box">{% if v.employer.logo %}<img src="{{ v.employer.logo.url }}" alt="">{% else %}{{ v.employer.name|slice:":1"|upper }}{% endif %}</div>
+  <div class="flex-grow-1" style="min-width:0">
+    <h3 class="h6 mb-0"><a class="vtitle" href="{{ v.get_absolute_url }}">{{ v.title }}</a></h3>
+    <div class="vmeta">
+      <span><i class="bi bi-building"></i>{{ v.employer.name }}</span>
+      <span><i class="bi bi-geo-alt"></i>{{ v.region }}</span>
+    </div>
+    <div class="vchips">
+      <span class="chip">{{ v.get_employment_type_display }}</span>
+      {% if v.days_left <= 3 and v.days_left >= 0 %}<span class="chip is-warn"><i class="bi bi-hourglass-split"></i>{% if v.days_left == 0 %}Bugun tugaydi{% else %}{{ v.days_left }} kun qoldi{% endif %}</span>{% endif %}
+      {% if v.pk in applied_ids %}<span class="chip is-done"><i class="bi bi-check2"></i>Ariza yuborilgan</span>{% endif %}
+    </div>
+  </div>
+  <div class="vside">
+    <div class="vsalary">{{ v.salary_display }}</div>
+    <div class="vdeadline">{{ v.deadline|date:"d.m.Y" }} gacha</div>
+  </div>
+</div>

@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Sahifa topilmadi{% endblock %}
+{% block content %}
+<div class="container"><div class="empty" style="padding:4rem 1rem">
+  <svg class="mark" viewBox="0 0 56 56" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round" aria-hidden="true"><rect x="14" y="14" width="28" height="28" rx="2"/><path d="M28 6 50 28 28 50 6 28z"/><circle cx="28" cy="28" r="5"/></svg>
+  <h1 class="h3">Sahifa topilmadi</h1>
+  <p>Havola eskirgan yoki manzil noto'g'ri yozilgan bo'lishi mumkin.</p>
+  <a class="btn btn-brand" href="{% url 'core:home' %}">Bosh sahifaga qaytish</a>
+  <a class="btn btn-outline-secondary ms-1" href="{% url 'vacancies:list' %}">Vakansiyalarni ko'rish</a></div></div>
+{% endblock %}

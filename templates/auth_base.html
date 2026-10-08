@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="uz" data-bs-theme="light">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>{% block title %}Kirish{% endblock %} — Karyera SIES</title>
+  {% include "includes/head_assets.html" %}
+</head>
+<body>
+{% include "includes/brand_symbol.html" %}
+<a class="skip-link" href="#main">Asosiy mazmunga o'tish</a>
+<div class="auth-wrap">
+  <aside class="auth-side">
+    <a class="site-brand" href="{% url 'core:home' %}">
+      <svg class="brand-mark" aria-hidden="true"><use href="#brand-mark"/></svg>
+      <span><b>Karyera SIES</b><small>Samarqand iqtisodiyot va servis instituti</small></span>
+    </a>
+    <div>
+      <h1>{% block side_title %}Diplomdan keyingi birinchi ish shu yerdan boshlanadi{% endblock %}</h1>
+      <p>{% block side_text %}Vakansiyalarni qidiring, rezyume yarating va ish beruvchilarga bevosita ariza yuboring.{% endblock %}</p>
+      {% block side_points %}
+      <ul class="auth-points">
+        <li><i class="bi bi-check2-circle"></i><span>Institut hamkorlaridan tasdiqlangan vakansiyalar</span></li>
+        <li><i class="bi bi-check2-circle"></i><span>Rezyumeni bir marta to'ldirib, PDF qilib yuklab oling</span></li>
+        <li><i class="bi bi-check2-circle"></i><span>Ariza holati haqida darhol xabar oling</span></li>
+      </ul>
+      {% endblock %}
+    </div>
+    <div class="small" style="color:#9fb2e6">© {% now "Y" %} Karyera markazi</div>
+  </aside>
+  <div class="auth-main">
+    <div class="auth-top">
+      <a class="btn btn-ghost btn-sm" href="{% url 'core:home' %}"><i class="bi bi-arrow-left me-1"></i>Bosh sahifa</a>
+      <button class="icon-btn" type="button" data-theme-toggle aria-label="Mavzuni almashtirish">
+        <i class="bi bi-moon-stars theme-icon-light"></i><i class="bi bi-sun theme-icon-dark"></i>
+      </button>
+    </div>
+    <main id="main" class="auth-form" tabindex="-1">
+      <div class="box{% block box_class %}{% endblock %}">
+        {% block content %}{% endblock %}
+      </div>
+    </main>
+  </div>
+</div>
+{% include "includes/flash.html" %}
+<script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/app.js' %}"></script>
+</body>
+</html>

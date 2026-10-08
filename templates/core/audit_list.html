@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Audit jurnali{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Audit jurnali</h1><p>Tizimdagi muhim amallar: kirishlar, o'zgarishlar, eksportlar.</p></div></div>
+<form class="filter-bar row g-2" method="get">
+  <div class="col-md-3"><input class="form-control" name="q" value="{{ g.q }}" placeholder="Login, obyekt yoki IP" aria-label="Qidirish"></div>
+  <div class="col-md-3"><select class="form-select" name="action" aria-label="Amal"><option value="">Barcha amallar</option>{% for v, l in actions %}<option value="{{ v }}" {% if g.action == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+  <div class="col-md-2"><input type="date" class="form-control" name="date_from" value="{{ g.date_from }}" aria-label="Sanadan"></div>
+  <div class="col-md-2"><input type="date" class="form-control" name="date_to" value="{{ g.date_to }}" aria-label="Sanagacha"></div>
+  <div class="col-md-2"><button class="btn btn-brand w-100">Filtr</button></div>
+</form>
+<div class="panel"><div class="table-responsive"><table class="table table-hover">
+  <thead><tr><th>Vaqt</th><th>Foydalanuvchi</th><th>Amal</th><th>Obyekt</th><th>Tafsilot</th><th>IP</th></tr></thead><tbody>
+  {% for a in page %}<tr><td class="text-nowrap tabular">{{ a.created_at|date:"d.m.Y H:i:s" }}</td><td>{{ a.username|default:"—" }}</td>
+    <td><span class="badge text-bg-{% if a.action == 'login_failed' %}danger{% elif a.action == 'role_change' or a.action == 'data_delete' or a.action == 'vacancy_delete' %}warning{% else %}secondary{% endif %}">{{ a.get_action_display }}</span></td>
+    <td>{{ a.object_repr|default:"—" }}</td><td class="small text-muted">{{ a.details|truncatechars:90 }}</td><td class="tabular small">{{ a.ip_address|default:"—" }}</td></tr>
+  {% empty %}<tr><td colspan="6">{% include "includes/empty.html" with title="Yozuv topilmadi" text="Filtrlarni o'zgartirib ko'ring." %}</td></tr>{% endfor %}
+</tbody></table></div></div>
+{% include "includes/pagination.html" %}
+{% endblock %}

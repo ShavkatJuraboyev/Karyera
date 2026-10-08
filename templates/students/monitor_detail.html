@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+{% load karyera_tags %}
+{% block title %}{{ profile.user.full_name }}{% endblock %}
+{% block content %}
+<div class="container">
+  <a class="crumb" href="{% url 'students:monitor_list' %}"><i class="bi bi-chevron-left"></i>Monitoring</a>
+  <div class="page-head">
+    <div class="d-flex align-items-center gap-3"><span class="avatar-sm" style="width:56px;height:56px;font-size:1.2rem">{{ profile.user|initials }}</span>
+      <div><h1>{{ profile.user.full_name|default:profile.user.username }}</h1><p>{{ profile.user.get_role_display }}, {{ profile.faculty|default:"fakultet ko'rsatilmagan" }}</p></div></div>
+    <div class="actions"><a class="btn btn-outline-secondary" href="{% url 'students:cv_other' profile.pk %}"><i class="bi bi-file-earmark-person me-1"></i>Rezyume</a>
+      {% if can_edit %}<a class="btn btn-brand" href="{% url 'students:monitor_edit' profile.pk %}"><i class="bi bi-pencil me-1"></i>Tahrirlash</a>{% endif %}</div>
+  </div>
+  <div class="row g-4">
+    <div class="col-lg-5"><div class="panel panel-pad profile-summary"><dl>
+      <div><dt>Yo'nalish</dt><dd>{{ profile.direction|default:"—" }}</dd></div>
+      <div><dt>{% if profile.is_graduate %}Bitiruv yili{% else %}Kurs{% endif %}</dt><dd>{% if profile.is_graduate %}{{ profile.graduation_year|default_if_none:"—"|stringformat:"s" }}{% else %}{{ profile.course|default_if_none:"—" }}{% endif %}</dd></div>
+      <div><dt>Telefon</dt><dd>{{ profile.user.phone|default:"—" }}</dd></div>
+      <div><dt>E-mail</dt><dd>{{ profile.user.email|default:"—" }}</dd></div>
+      <div><dt>Hudud</dt><dd>{{ profile.region|default:"—" }}</dd></div>
+      <div><dt>Bandlik holati</dt><dd><span class="badge text-bg-{{ profile.status_badge }}">{{ profile.get_employment_status_display }}</span></dd></div>
+      <div><dt>Tashkilot</dt><dd>{{ profile.employer_name|default:"—" }}</dd></div>
+      <div><dt>Lavozim</dt><dd>{{ profile.position|default:"—" }}</dd></div>
+      <div><dt>Ishga joylashgan sana</dt><dd>{{ profile.employed_date|date:"d.m.Y"|default:"—" }}</dd></div>
+      <div><dt>Profil to'liqligi</dt><dd>{{ profile.completeness }}%</dd></div></dl></div></div>
+    <div class="col-lg-7">
+      <div class="panel mb-3"><div class="panel-head"><h2>Vakansiyalarga arizalar</h2></div>
+        <ul class="rowlist">{% for a in applications %}<li><div class="grow"><div class="title">{{ a.vacancy.title }}</div><div class="sub">{{ a.vacancy.employer.name }}, {{ a.created_at|date:"d.m.Y" }}</div></div><span class="badge text-bg-{{ a.status_badge }}">{{ a.get_status_display }}</span></li>{% empty %}<li class="text-muted">Arizalar yo'q</li>{% endfor %}</ul></div>
+      <div class="panel"><div class="panel-head"><h2>Tadbirlarda ishtirok</h2></div>
+        <ul class="rowlist">{% for r in registrations %}<li><div class="grow"><div class="title">{{ r.event.title }}</div><div class="sub">{{ r.event.start_at|date:"d.m.Y" }}</div></div>{% if r.attended %}<span class="badge text-bg-success">Qatnashgan</span>{% else %}<span class="badge text-bg-secondary">Yozilgan</span>{% endif %}</li>{% empty %}<li class="text-muted">Ma'lumot yo'q</li>{% endfor %}</ul></div>
+    </div>
+  </div>
+</div>
+{% endblock %}

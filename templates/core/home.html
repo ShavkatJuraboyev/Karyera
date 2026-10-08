@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Bosh sahifa{% endblock %}
+{% block content %}
+<section class="hero">
+  <div class="hero-pattern" aria-hidden="true"></div>
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <h1>Diplomingizga mos ish bir joyda</h1>
+        <p class="lead">Samarqand iqtisodiyot va servis instituti talabalari va bitiruvchilari uchun vakansiyalar, ish beruvchilar va karyera tadbirlari.</p>
+        <form class="hero-search" action="{% url 'vacancies:list' %}" method="get" role="search">
+          <input class="form-control" type="search" name="q" placeholder="Lavozim yoki tashkilot nomi" aria-label="Vakansiya qidirish" autocomplete="off">
+          <button class="btn btn-accent btn-lg" type="submit"><i class="bi bi-search me-2"></i>Qidirish</button>
+        </form>
+        <div class="hero-quick">
+          <span>Ko'p qidiriladi:</span>
+          <a href="{% url 'vacancies:list' %}?type=internship">Amaliyot</a>
+          <a href="{% url 'vacancies:list' %}?type=remote">Masofaviy</a>
+          <a href="{% url 'vacancies:list' %}?sort=salary">Yuqori maosh</a>
+        </div>
+        <p class="hero-fact">Hozir <b>{{ stats.vacancies }}</b> ta faol vakansiya va <b>{{ stats.employers }}</b> ta ish beruvchi sizni kutmoqda.</p>
+      </div>
+      <div class="hero-sheet">
+        <div class="sheet-head"><h2>Yangi vakansiyalar</h2><a class="small fw-medium text-decoration-none" href="{% url 'vacancies:list' %}">Hammasi<i class="bi bi-chevron-right ms-1"></i></a></div>
+        <div class="rowlist">
+          {% for v in vacancies|slice:":4" %}
+            <a href="{{ v.get_absolute_url }}">
+              <div class="logo-box">{% if v.employer.logo %}<img src="{{ v.employer.logo.url }}" alt="">{% else %}{{ v.employer.name|slice:":1"|upper }}{% endif %}</div>
+              <div class="grow"><div class="title truncate">{{ v.title }}</div><div class="sub truncate">{{ v.employer.name }}, {{ v.region }}</div></div>
+              <div class="text-end small fw-medium d-none d-sm-block">{{ v.salary_display }}</div>
+            </a>
+          {% empty %}
+            <div class="p-4 text-center text-muted">Hozircha faol vakansiyalar yo'q.</div>
+          {% endfor %}
+        </div>
+        <div class="sheet-foot text-muted">Har bir vakansiya Karyera markazi tomonidan tekshiriladi.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<div class="container home-wrap">
+  <section class="section" style="padding-top:3rem">
+    <div class="paths">
+      <div class="path"><div class="ico"><i class="bi bi-mortarboard"></i></div><h3>Talaba va bitiruvchilar</h3>
+        <p>Profil va rezyume yarating, vakansiyaga ariza yuboring, tadbirlarga yoziling.</p>
+        <div class="links">{% if user.is_authenticated and user.is_candidate %}<a href="{% url 'students:profile' %}">Profilim</a><a href="{% url 'vacancies:my_applications' %}">Arizalarim</a>{% else %}<a href="{% url 'accounts:register' %}">Ro'yxatdan o'tish</a><a href="{% url 'vacancies:list' %}">Vakansiyalar</a>{% endif %}</div></div>
+      <div class="path"><div class="ico"><i class="bi bi-building"></i></div><h3>Ish beruvchilar</h3>
+        <p>Vakansiya joylashtiring, nomzodlarni ko'ring va suhbatga taklif qiling.</p>
+        <div class="links">{% if user.is_authenticated and user.is_employer %}<a href="{% url 'employers:dashboard' %}">Boshqaruv paneli</a><a href="{% url 'vacancies:employer_list' %}">Vakansiyalarim</a>{% else %}<a href="{% url 'accounts:register_employer' %}">Tashkilotni ro'yxatdan o'tkazish</a>{% endif %}</div></div>
+      <div class="path"><div class="ico"><i class="bi bi-graph-up-arrow"></i></div><h3>Fakultet va rahbariyat</h3>
+        <p>Bitiruvchilar bandligini kuzating, hisobotlarni Excel va PDF'ga yuklab oling.</p>
+        <div class="links">{% if user.is_authenticated and user.can_view_analytics %}<a href="{% url 'reports:dashboard' %}">Dashboard</a><a href="{% url 'reports:index' %}">Hisobotlar</a>{% else %}<a href="{% url 'accounts:login' %}">Tizimga kirish</a>{% endif %}</div></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><h2>Qanday ishlaydi</h2><p>Birinchi arizagacha uch qadam.</p></div></div>
+    <div class="steps">
+      <div class="step"><h3>Profilni to'ldiring</h3><p>Ta'lim, ko'nikma, til va tajribangizni kiriting. Rezyume avtomatik tayyor bo'ladi.</p></div>
+      <div class="step"><h3>Ariza yuboring</h3><p>Yo'nalishingizga mos vakansiyani toping va bir tugma bilan ariza topshiring.</p></div>
+      <div class="step"><h3>Suhbatga boring</h3><p>Ish beruvchi javobi va suhbat vaqti haqida xabar olasiz.</p></div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="section-head"><div><h2>So'nggi vakansiyalar</h2></div><a class="fw-medium text-decoration-none" href="{% url 'vacancies:list' %}">Barcha vakansiyalar<i class="bi bi-chevron-right ms-1"></i></a></div>
+    {% for v in vacancies %}{% include "includes/vacancy_card.html" %}{% empty %}
+      <div class="panel">{% include "includes/empty.html" with title="Faol vakansiyalar hozircha yo'q" text="Yangi vakansiyalar paydo bo'lganda shu yerda ko'rinadi." %}</div>{% endfor %}
+  </section>
+
+  <section class="section">
+    <div class="row g-5">
+      <div class="col-lg-7">
+        <div class="section-head"><div><h2>Yaqin tadbirlar</h2></div><a class="fw-medium text-decoration-none" href="{% url 'events:list' %}">Barchasi<i class="bi bi-chevron-right ms-1"></i></a></div>
+        <div class="panel"><div class="rowlist">
+          {% for e in events %}
+            <a href="{{ e.get_absolute_url }}">
+              <div class="date-tile"><div class="m">{{ e.start_at|date:"M"|upper }}</div><div class="d">{{ e.start_at|date:"d" }}</div></div>
+              <div class="grow"><div class="title">{{ e.title }}</div><div class="sub"><i class="bi bi-clock me-1"></i>{{ e.start_at|date:"H:i" }}<i class="bi bi-geo-alt ms-3 me-1"></i>{{ e.location }}</div></div>
+              <span class="badge text-bg-{{ e.badge }}">{{ e.get_event_type_display }}</span>
+            </a>
+          {% empty %}{% include "includes/empty.html" with title="Rejalashtirilgan tadbirlar yo'q" %}{% endfor %}
+        </div></div>
+      </div>
+      <div class="col-lg-5">
+        <div class="section-head"><div><h2>Yangiliklar</h2></div><a class="fw-medium text-decoration-none" href="{% url 'core:news_list' %}">Barchasi<i class="bi bi-chevron-right ms-1"></i></a></div>
+        {% for n in news %}
+          <a class="news-item" href="{{ n.get_absolute_url }}"><span class="badge text-bg-{{ n.badge }}">{{ n.get_category_display }}</span>
+            <h3>{{ n.title }}</h3><p>{{ n.body|truncatechars:110 }}</p></a>
+        {% empty %}<p class="text-muted">Yangiliklar hozircha yo'q.</p>{% endfor %}
+      </div>
+    </div>
+  </section>
+
+  {% if not user.is_authenticated or user.is_employer %}
+  <section class="section">
+    <div class="cta-band">
+      <div><h2>Tashkilotingizga xodim kerakmi?</h2><p>Institut bitiruvchilari va yuqori kurs talabalariga vakansiyangizni bevosita ko'rsating.</p></div>
+      <a class="btn btn-accent btn-lg" href="{% if user.is_authenticated %}{% url 'vacancies:employer_list' %}{% else %}{% url 'accounts:register_employer' %}{% endif %}">Vakansiya joylashtirish</a>
+    </div>
+  </section>
+  {% endif %}
+</div>
+{% endblock %}

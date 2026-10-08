@@ -1,0 +1,26 @@
+{% extends "auth_base.html" %}
+{% block title %}Ish beruvchi sifatida ro'yxatdan o'tish{% endblock %}
+{% block side_title %}Tashkilotingizga mos xodimni institut bitiruvchilari orasidan toping{% endblock %}
+{% block side_text %}Vakansiya joylashtiring, nomzodlarning rezyumesini ko'ring va suhbatga taklif qiling.{% endblock %}
+{% block side_points %}
+<ul class="auth-points">
+  <li><i class="bi bi-check2-circle"></i><span>Karyera markazi tashkilotingizni tasdiqlaydi</span></li>
+  <li><i class="bi bi-check2-circle"></i><span>Tasdiqlangan vakansiyalar talabalarga ko'rinadi</span></li>
+  <li><i class="bi bi-check2-circle"></i><span>Arizalar va suhbatlar bir joyda yuritiladi</span></li>
+</ul>
+{% endblock %}
+{% block box_class %} wide{% endblock %}
+{% block content %}
+  <div class="auth-switch" role="tablist">
+    <a href="{% url 'accounts:register' %}">Talaba yoki bitiruvchi</a>
+    <a class="active" href="{% url 'accounts:register_employer' %}">Ish beruvchi</a>
+  </div>
+  <h2>Tashkilotni ro'yxatdan o'tkazing</h2>
+  <p class="sub">Ro'yxatdan o'tgach, Karyera markazi ma'lumotlarni tekshiradi. Shundan keyin vakansiya joylashtira olasiz.</p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_grid.html" %}
+    <button class="btn btn-brand btn-lg w-100 mt-2" type="submit">Ro'yxatdan o'tish</button>
+  </form>
+  <p class="text-center text-muted mt-3 mb-0">Hisobingiz bormi? <a href="{% url 'accounts:login' %}">Kirish</a></p>
+{% endblock %}

@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% block title %}{{ vacancy.title }}{% endblock %}
+{% block content %}
+<div class="container">
+  <a class="crumb" href="{% url 'vacancies:manage_list' %}"><i class="bi bi-chevron-left"></i>Moderatsiya</a>
+  <div class="page-head"><div><h1>{{ vacancy.title }}</h1><p><a class="text-decoration-none" href="{% url 'employers:manage_detail' vacancy.employer.pk %}">{{ vacancy.employer.name }}</a>, {{ vacancy.region }}</p></div>
+    <div class="actions"><span class="badge text-bg-{{ vacancy.status_badge }} fs-6">{{ vacancy.get_status_display }}</span></div></div>
+  <div class="row g-4">
+    <div class="col-lg-8"><div class="panel panel-pad">
+      <div class="d-flex flex-wrap gap-2 mb-3"><span class="chip">{{ vacancy.get_employment_type_display }}</span><span class="chip is-money">{{ vacancy.salary_display }}</span><span class="chip">Muddat: {{ vacancy.deadline|date:"d.m.Y" }}</span>
+        <span class="badge text-bg-{{ vacancy.employer.status_badge }}">Tashkilot: {{ vacancy.employer.get_status_display }}</span></div>
+      <div class="prose"><h2>Vazifalar</h2><div class="pre-wrap">{{ vacancy.duties }}</div><h2>Talablar</h2><div class="pre-wrap">{{ vacancy.requirements }}</div>
+        {% if vacancy.schedule %}<h2>Ish grafigi</h2><div>{{ vacancy.schedule }}</div>{% endif %}
+        {% if vacancy.directions.all %}<h2>Mos yo'nalishlar</h2><div class="d-flex flex-wrap gap-2">{% for d in vacancy.directions.all %}<span class="chip">{{ d.name }}</span>{% endfor %}</div>{% endif %}</div>
+      <div class="small text-muted mt-4">Arizalar: {{ app_count }}. Ko'rishlar: {{ vacancy.views_count }}.</div>
+    </div></div>
+    <div class="col-lg-4"><div class="panel panel-pad sticky-side">
+      <h2 class="h5 mb-3">Qaror</h2>
+      {% if vacancy.moderation_comment %}<div class="alert alert-secondary small">Oxirgi izoh: {{ vacancy.moderation_comment }}</div>{% endif %}
+      {% if vacancy.status == 'draft' %}<div class="alert alert-secondary mb-0">Qoralama. Ish beruvchi hali moderatsiyaga yubormagan.</div>
+      {% else %}<form method="post" novalidate>{% csrf_token %}{% include "includes/form_fields.html" %}<button class="btn btn-brand w-100" type="submit">Qarorni saqlash</button></form>{% endif %}
+    </div></div>
+  </div>
+</div>
+{% endblock %}

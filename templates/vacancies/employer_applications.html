@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Arizalar{% endblock %}
+{% block content %}
+<a class="crumb" href="{% url 'vacancies:employer_list' %}"><i class="bi bi-chevron-left"></i>Vakansiyalarim</a>
+<div class="page-head"><div><h1>{{ vacancy.title }}</h1><p>Shu vakansiyaga kelgan arizalar.</p></div></div>
+<div class="d-flex flex-wrap gap-2 mb-3"><a class="btn btn-sm {% if not status %}btn-brand{% else %}btn-outline-secondary{% endif %}" href="?">Barchasi</a>
+  {% for v, l in statuses %}<a class="btn btn-sm {% if status == v %}btn-brand{% else %}btn-outline-secondary{% endif %}" href="?status={{ v }}">{{ l }}</a>{% endfor %}</div>
+{% include "vacancies/_applications_table.html" %}
+{% include "includes/pagination.html" %}
+{% endblock %}

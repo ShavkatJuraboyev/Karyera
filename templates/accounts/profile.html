@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block title %}Shaxsiy ma'lumotlar{% endblock %}
+{% block content %}
+<div class="container" style="max-width:720px;margin-left:0">
+  <div class="page-head"><div><h1>Shaxsiy ma'lumotlar</h1><p>Login: <b>{{ user.username }}</b>. Rol: {{ user.get_role_display }}.</p></div>
+    <div class="actions"><a class="btn btn-outline-secondary" href="{% url 'accounts:password_change' %}"><i class="bi bi-key me-1"></i>Parolni o'zgartirish</a></div></div>
+  <div class="panel panel-pad">
+    <form method="post" novalidate>{% csrf_token %}{% include "includes/form_fields.html" %}
+      <button class="btn btn-brand" type="submit">Saqlash</button></form>
+  </div>
+</div>
+{% endblock %}

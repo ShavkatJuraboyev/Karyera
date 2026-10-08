@@ -1,0 +1,17 @@
+{% extends "auth_base.html" %}
+{% block title %}Ro'yxatdan o'tish{% endblock %}
+{% block box_class %} wide{% endblock %}
+{% block content %}
+  <div class="auth-switch" role="tablist">
+    <a class="active" href="{% url 'accounts:register' %}">Talaba yoki bitiruvchi</a>
+    <a href="{% url 'accounts:register_employer' %}">Ish beruvchi</a>
+  </div>
+  <h2>Hisob yarating</h2>
+  <p class="sub">Bir daqiqada ro'yxatdan o'ting, keyin profilingizni to'ldirasiz.</p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    {% include "includes/form_grid.html" %}
+    <button class="btn btn-brand btn-lg w-100 mt-2" type="submit">Ro'yxatdan o'tish</button>
+  </form>
+  <p class="text-center text-muted mt-3 mb-0">Hisobingiz bormi? <a href="{% url 'accounts:login' %}">Kirish</a></p>
+{% endblock %}

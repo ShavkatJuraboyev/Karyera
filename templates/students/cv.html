@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Rezyume{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="cv-tools no-print">
+    {% if not owner %}<a class="crumb" href="javascript:history.back()"><i class="bi bi-chevron-left"></i>Orqaga</a>{% endif %}
+    <div class="page-head mb-3">
+      <div><h1>Rezyume (CV)</h1><p>{% if owner %}Profilingiz asosida avtomatik yaratiladi.{% else %}{{ profile.user.full_name }} rezyumesi.{% endif %}</p></div>
+      <div class="actions">
+        {% if owner %}<a class="btn btn-outline-secondary" href="{% url 'students:profile' %}"><i class="bi bi-pencil me-1"></i>Tahrirlash</a>{% endif %}
+        <button class="btn btn-outline-secondary" type="button" onclick="window.print()" data-no-lock><i class="bi bi-printer me-1"></i>Chop etish</button>
+        <a class="btn btn-brand" href="{% if owner %}{% url 'students:cv_pdf' %}{% else %}{% url 'students:cv_pdf_other' profile.pk %}{% endif %}"><i class="bi bi-file-earmark-pdf me-1"></i>PDF yuklab olish</a>
+      </div>
+    </div>
+    {% if owner and profile.completeness < 80 %}
+      <div class="panel panel-pad d-flex align-items-center gap-3 mb-3">
+        <div class="ring" style="--p:{{ profile.completeness }}"><span>{{ profile.completeness }}%</span></div>
+        <div><div class="fw-medium">Rezyume to'liqligi {{ profile.completeness }}%</div>
+          <div class="text-muted small">Ko'nikma, til, tajriba va o'zingiz haqingizda ma'lumot qo'shsangiz, ish beruvchilar e'tiborini ko'proq tortasiz.</div></div>
+        <a class="btn btn-outline-primary btn-sm ms-auto" href="{% url 'students:profile' %}">To'ldirish</a>
+      </div>
+    {% endif %}
+  </div>
+  {% include "students/_cv.html" %}
+</div>
+{% endblock %}

@@ -1,0 +1,74 @@
+{% load karyera_tags %}
+<article class="cv2" aria-label="{{ profile.user.full_name }} rezyumesi">
+  <aside class="cv2-side">
+    {% if profile.photo %}<img class="cv2-photo" src="{% url 'students:file' 'photo' profile.pk %}" alt="{{ profile.user.full_name }}">
+    {% else %}<div class="cv2-initials" aria-hidden="true">{{ profile.user|initials }}</div>{% endif %}
+
+    <h2>Aloqa</h2>
+    <ul class="cv2-contact">
+      {% if profile.user.phone %}<li><i class="bi bi-telephone"></i><span>{{ profile.user.phone }}</span></li>{% endif %}
+      {% if profile.user.email %}<li><i class="bi bi-envelope"></i><span>{{ profile.user.email }}</span></li>{% endif %}
+      {% if profile.region %}<li><i class="bi bi-geo-alt"></i><span>{{ profile.region }}{% if profile.address %}, {{ profile.address }}{% endif %}</span></li>{% endif %}
+      {% if profile.birth_date %}<li><i class="bi bi-calendar3"></i><span>{{ profile.birth_date|date:"d.m.Y" }}</span></li>{% endif %}
+    </ul>
+
+    {% if profile.skills.all %}
+    <h2>Ko'nikmalar</h2>
+    {% for s in profile.skills.all %}
+      <div class="cv2-skill"><div class="n"><span>{{ s.name }}</span></div>
+        <div class="cv2-dots" role="img" aria-label="{{ s.get_level_display }}">{% for i in "1234" %}<span class="{% if forloop.counter <= s.level %}on{% endif %}"></span>{% endfor %}</div></div>
+    {% endfor %}
+    {% endif %}
+
+    {% if profile.languages.all %}
+    <h2>Tillar</h2>
+    {% for l in profile.languages.all %}<div class="cv2-lang"><span>{{ l.language }}</span><span>{% if l.level == "native" %}Ona tili{% else %}{{ l.level }}{% endif %}</span></div>{% endfor %}
+    {% endif %}
+  </aside>
+
+  <div class="cv2-main">
+    <h1 class="cv2-name">{{ profile.user.full_name|default:profile.user.username }}</h1>
+    {% if profile.desired_position %}<p class="cv2-role">{{ profile.desired_position }}</p>{% endif %}
+    {% if profile.employment_status == 'looking' %}<span class="cv2-status">Ish izlayapti</span>{% endif %}
+    {% if profile.about %}<p class="cv2-about">{{ profile.about }}</p>{% endif %}
+
+    {% if profile.experiences.all %}
+    <h2>Ish tajribasi</h2>
+    <div class="cv2-tl">
+      {% for e in profile.experiences.all %}
+        <div class="cv2-item{% if not e.end_date %} is-current{% endif %}">
+          <h3>{{ e.position }}</h3>
+          <div class="org">{{ e.company }}</div>
+          <div class="when">{{ e.start_date|date:"m.Y" }} — {% if e.end_date %}{{ e.end_date|date:"m.Y" }}{% else %}hozirgacha{% endif %}</div>
+          {% if e.description %}<p>{{ e.description }}</p>{% endif %}
+        </div>
+      {% endfor %}
+    </div>
+    {% endif %}
+
+    <h2>Ta'lim</h2>
+    <div class="cv2-tl">
+      <div class="cv2-item{% if not profile.is_graduate %} is-current{% endif %}">
+        <h3>{{ profile.direction|default:"Ta'lim yo'nalishi ko'rsatilmagan" }}</h3>
+        <div class="org">Samarqand iqtisodiyot va servis instituti</div>
+        <div class="when">{% if profile.faculty %}{{ profile.faculty }}{% endif %}{% if profile.course and not profile.is_graduate %}, {{ profile.course }}-kurs{% endif %}{% if profile.graduation_year %}, bitirgan yil: {{ profile.graduation_year|stringformat:"s" }}{% endif %}</div>
+      </div>
+    </div>
+
+    {% if profile.certificates.all %}
+    <h2>Sertifikatlar</h2>
+    <ul class="cv2-list">
+      {% for c in profile.certificates.all %}<li><i class="bi bi-patch-check"></i><span><b>{{ c.title }}</b>{% if c.issuer %}, {{ c.issuer }}{% endif %}</span>{% if c.issue_date %}<span class="y">{{ c.issue_date|date:"Y" }}</span>{% endif %}</li>{% endfor %}
+    </ul>
+    {% endif %}
+
+    {% if profile.portfolio.all %}
+    <h2>Portfolio</h2>
+    <ul class="cv2-list">
+      {% for p in profile.portfolio.all %}<li><i class="bi bi-link-45deg"></i><span><b>{{ p.title }}</b>{% if p.description %}. {{ p.description|truncatechars:120 }}{% endif %}{% if p.url %} <a href="{{ p.url }}" rel="noopener noreferrer" target="_blank">{{ p.url }}</a>{% endif %}</span></li>{% endfor %}
+    </ul>
+    {% endif %}
+
+    <div class="cv2-foot"><span>Karyera SIES platformasida yaratilgan</span><span>{% now "d.m.Y" %}</span></div>
+  </div>
+</article>

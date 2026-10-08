@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}Vakansiya{% endblock %}
+{% block content %}
+<div class="container" style="max-width:900px;margin-left:0">
+  <a class="crumb" href="{% url 'vacancies:employer_list' %}"><i class="bi bi-chevron-left"></i>Vakansiyalarim</a>
+  <div class="page-head"><div><h1>{% if vacancy %}Vakansiyani tahrirlash{% else %}Yangi vakansiya{% endif %}</h1><p>Aniq talab va vazifalar yozilsa, mos nomzodlar ko'proq ariza yuboradi.</p></div></div>
+  {% if vacancy and vacancy.status == 'published' %}<div class="alert alert-info">E'lon qilingan vakansiya o'zgartirilsa, qayta moderatsiyadan o'tadi.</div>{% endif %}
+  {% if vacancy and vacancy.status == 'rejected' and vacancy.moderation_comment %}<div class="alert alert-danger"><b>Rad etish sababi:</b> {{ vacancy.moderation_comment }}</div>{% endif %}
+  <div class="panel panel-pad">
+    <form method="post" novalidate>{% csrf_token %}{% include "includes/form_grid.html" %}
+      <div class="d-flex flex-wrap gap-2 mt-2">
+        {% if can_draft %}<button class="btn btn-brand" name="action" value="submit" type="submit">Moderatsiyaga yuborish</button>
+          <button class="btn btn-outline-primary" name="action" value="draft" type="submit">Qoralama sifatida saqlash</button>
+        {% else %}<button class="btn btn-brand" name="action" value="submit" type="submit">Saqlash va moderatsiyaga yuborish</button>{% endif %}
+        <a class="btn btn-outline-secondary" href="{% url 'vacancies:employer_list' %}">Bekor qilish</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

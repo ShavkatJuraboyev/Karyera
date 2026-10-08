@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block title %}Bildirishnomalar{% endblock %}
+{% block content %}
+<div class="container" style="max-width:860px;margin-left:0">
+  <div class="page-head"><div><h1>Bildirishnomalar</h1><p>Arizalar, moderatsiya va tadbirlar bo'yicha xabarlar.</p></div>
+    <div class="actions"><form method="post" action="{% url 'core:notifications_read_all' %}">{% csrf_token %}<button class="btn btn-outline-secondary"><i class="bi bi-check2-all me-1"></i>Hammasini o'qilgan deb belgilash</button></form></div></div>
+  <div class="panel"><div class="rowlist">
+  {% for n in page %}
+    <a class="{% if not n.is_read %}notif-unread{% endif %}" href="{% url 'core:notification_open' n.pk %}">
+      <span class="avatar-sm" style="{% if n.is_read %}background:var(--t-neutral);color:var(--i-neutral){% endif %}"><i class="bi bi-bell"></i></span>
+      <div class="grow"><div class="title">{{ n.title }}</div>{% if n.message %}<div class="sub">{{ n.message }}</div>{% endif %}</div>
+      <div class="sub text-nowrap">{{ n.created_at|date:"d.m.Y H:i" }}</div>
+    </a>
+  {% empty %}{% include "includes/empty.html" with title="Yangi xabar yo'q" text="Arizangiz holati o'zgarganda yoki yangi vakansiya chiqqanda shu yerda ko'rasiz." %}{% endfor %}
+  </div></div>
+  {% include "includes/pagination.html" %}
+</div>
+{% endblock %}

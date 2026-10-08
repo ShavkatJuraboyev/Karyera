@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% block title %}{{ vacancy.title }}{% endblock %}
+{% block content %}
+<div class="container">
+  <a class="crumb" href="{% url 'vacancies:list' %}"><i class="bi bi-chevron-left"></i>Barcha vakansiyalar</a>
+  <div class="row g-4">
+    <div class="col-lg-8">
+      <div class="panel panel-pad">
+        <div class="detail-head">
+          <div class="logo-box">{% if vacancy.employer.logo %}<img src="{{ vacancy.employer.logo.url }}" alt="">{% else %}{{ vacancy.employer.name|slice:":1"|upper }}{% endif %}</div>
+          <div>
+            <h1 class="h2 mb-1">{{ vacancy.title }}</h1>
+            <div class="text-muted"><a class="text-decoration-none fw-medium" href="{{ vacancy.employer.get_absolute_url }}">{{ vacancy.employer.name }}</a>, {{ vacancy.region }}</div>
+            <div class="mt-2 d-flex flex-wrap gap-2">
+              {% if vacancy.status != 'published' %}<span class="badge text-bg-{{ vacancy.status_badge }}">{{ vacancy.get_status_display }}</span>{% endif %}
+              {% if vacancy.is_expired and vacancy.status == 'published' %}<span class="badge text-bg-secondary">Muddati o'tgan</span>{% endif %}
+              <span class="chip">{{ vacancy.get_employment_type_display }}</span>
+              <span class="chip is-money">{{ vacancy.salary_display }}</span>
+              {% if vacancy.schedule %}<span class="chip"><i class="bi bi-clock"></i>{{ vacancy.schedule }}</span>{% endif %}
+            </div>
+          </div>
+        </div>
+        <hr class="my-4">
+        <div class="prose">
+          <h2>Vazifalar</h2><div class="pre-wrap">{{ vacancy.duties }}</div>
+          <h2>Talablar</h2><div class="pre-wrap">{{ vacancy.requirements }}</div>
+          {% if vacancy.directions.all %}<h2>Mos yo'nalishlar</h2><div class="d-flex flex-wrap gap-2">{% for d in vacancy.directions.all %}<span class="chip">{{ d.name }}</span>{% endfor %}</div>{% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-lg-4">
+      <div class="panel panel-pad apply-box">
+        <dl class="facts mb-3">
+          <div><dt>Murojaat muddati</dt><dd>{{ vacancy.deadline|date:"d.m.Y" }}</dd></div>
+          <div><dt>Qoldi</dt><dd>{% if vacancy.is_open %}{{ vacancy.days_left }} kun{% else %}—{% endif %}</dd></div>
+          <div><dt>E'lon qilingan</dt><dd>{{ vacancy.published_at|date:"d.m.Y"|default:"—" }}</dd></div>
+          <div><dt>Ko'rishlar</dt><dd>{{ vacancy.views_count }}</dd></div>
+        </dl>
+        {% if not user.is_authenticated %}
+          <a class="btn btn-brand w-100" href="{% url 'accounts:login' %}?next={{ request.path }}">Ariza uchun kiring</a>
+          <div class="form-text text-center mt-2">Hisobingiz yo'qmi? <a href="{% url 'accounts:register' %}">Ro'yxatdan o'ting</a></div>
+        {% elif application and application.status != 'withdrawn' %}
+          <div class="alert alert-info mb-0"><div class="fw-medium mb-1">Arizangiz yuborilgan</div><span class="badge text-bg-{{ application.status_badge }}">{{ application.get_status_display }}</span>
+            <div class="mt-2 small"><a href="{% url 'vacancies:my_applications' %}">Arizalarim</a></div></div>
+        {% elif can_apply %}
+          <form method="post" action="{% url 'vacancies:apply' vacancy.pk %}">{% csrf_token %}{% include "includes/form_fields.html" %}
+            <button class="btn btn-brand w-100" type="submit"><i class="bi bi-send me-2"></i>Ariza yuborish</button>
+            <div class="form-text mt-2">Rezyumengiz ish beruvchiga ko'rsatiladi. <a href="{% url 'students:profile' %}">Profilni tekshirish</a></div></form>
+        {% elif user.is_candidate %}
+          <div class="alert alert-secondary mb-0">Bu vakansiya hozir ariza qabul qilmaydi.</div>
+        {% elif is_owner %}
+          <a class="btn btn-brand w-100 mb-2" href="{% url 'vacancies:employer_vacancy_applications' vacancy.pk %}">Arizalarni ko'rish</a>
+          <a class="btn btn-outline-secondary w-100" href="{% url 'vacancies:employer_edit' vacancy.pk %}">Tahrirlash</a>
+        {% elif is_staff %}
+          <a class="btn btn-brand w-100" href="{% url 'vacancies:manage_detail' vacancy.pk %}">Moderatsiyaga o'tish</a>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

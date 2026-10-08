@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+{% load karyera_tags %}
+{% block title %}Foydalanuvchilar{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Foydalanuvchilar va rollar</h1><p>Tizimdagi hisoblar, ularning rollari va holati.</p></div>
+  <div class="actions"><a class="btn btn-brand" href="{% url 'accounts:user_create' %}"><i class="bi bi-plus-lg me-1"></i>Yangi foydalanuvchi</a></div></div>
+<form class="filter-bar row g-2" method="get">
+  <div class="col-md-4"><input class="form-control" name="q" value="{{ q }}" placeholder="Login, ism yoki e-mail" aria-label="Qidirish"></div>
+  <div class="col-md-3"><select class="form-select" name="role" aria-label="Rol"><option value="">Barcha rollar</option>{% for v, l in roles %}<option value="{{ v }}" {% if v == role %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+  <div class="col-md-3"><select class="form-select" name="active" aria-label="Holati"><option value="">Har qanday holat</option><option value="1" {% if active == '1' %}selected{% endif %}>Faol</option><option value="0" {% if active == '0' %}selected{% endif %}>Bloklangan</option></select></div>
+  <div class="col-md-2"><button class="btn btn-brand w-100">Qidirish</button></div>
+</form>
+<div class="panel"><div class="table-responsive"><table class="table table-hover">
+  <thead><tr><th>Foydalanuvchi</th><th>E-mail</th><th>Rol</th><th>Fakultet</th><th>Holati</th><th></th></tr></thead>
+  <tbody>
+  {% for u in page %}
+    <tr><td><div class="d-flex align-items-center gap-2"><span class="avatar-sm">{{ u|initials }}</span><div><div class="fw-medium">{{ u.full_name|default:u.username }}</div><div class="small text-muted">{{ u.username }}</div></div></div></td>
+      <td>{{ u.email|default:"—" }}</td><td>{{ u.get_role_display }}</td><td>{{ u.faculty|default:"—" }}</td>
+      <td>{% if u.is_active %}<span class="badge text-bg-success">Faol</span>{% else %}<span class="badge text-bg-danger">Bloklangan</span>{% endif %}</td>
+      <td class="text-end"><a class="btn btn-sm btn-outline-primary" href="{% url 'accounts:user_edit' u.pk %}">Tahrirlash</a></td></tr>
+  {% empty %}<tr><td colspan="6">{% include "includes/empty.html" with title="Foydalanuvchi topilmadi" text="Qidiruv shartlarini o'zgartirib ko'ring." %}</td></tr>{% endfor %}
+  </tbody></table></div></div>
+{% include "includes/pagination.html" %}
+{% endblock %}

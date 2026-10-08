@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+{% load karyera_tags %}
+{% block title %}Monitoring{% endblock %}
+{% block content %}
+<div class="page-head"><div><h1>Talaba va bitiruvchilar monitoringi</h1><p>Jami: <b class="text-body">{{ total }}</b> ta yozuv.</p></div>
+  <div class="actions">
+    <a class="btn btn-outline-secondary" href="?{{ querystring }}{% if querystring %}&{% endif %}export=xlsx"><i class="bi bi-file-earmark-excel me-1"></i>Excel</a>
+    <a class="btn btn-outline-secondary" href="?{{ querystring }}{% if querystring %}&{% endif %}export=pdf"><i class="bi bi-file-earmark-pdf me-1"></i>PDF</a>
+  </div></div>
+<form class="filter-bar" method="get"><div class="row g-2">
+  <div class="col-md-4"><input class="form-control" name="q" value="{{ g.q }}" placeholder="F.I.Sh., login, telefon, tashkilot" aria-label="Qidirish"></div>
+  <div class="col-md-4"><select class="form-select" name="faculty" aria-label="Fakultet"><option value="">Barcha fakultetlar</option>{% for f in faculties %}<option value="{{ f.pk }}" {% if g.faculty == f.pk|stringformat:"s" %}selected{% endif %}>{{ f.name }}</option>{% endfor %}</select></div>
+  <div class="col-md-4"><select class="form-select" name="direction" aria-label="Yo'nalish"><option value="">Barcha yo'nalishlar</option>{% for d in directions %}<option value="{{ d.pk }}" {% if g.direction == d.pk|stringformat:"s" %}selected{% endif %}>{{ d.name }}</option>{% endfor %}</select></div>
+  <div class="col-md-3"><select class="form-select" name="status" aria-label="Bandlik"><option value="">Barcha holatlar</option>{% for v, l in statuses %}<option value="{{ v }}" {% if g.status == v %}selected{% endif %}>{{ l }}</option>{% endfor %}</select></div>
+  <div class="col-md-3"><select class="form-select" name="role" aria-label="Rol"><option value="">Talaba va bitiruvchi</option><option value="student" {% if g.role == 'student' %}selected{% endif %}>Faqat talabalar</option><option value="graduate" {% if g.role == 'graduate' %}selected{% endif %}>Faqat bitiruvchilar</option></select></div>
+  <div class="col-md-2"><input class="form-control" type="number" name="course" min="1" max="6" value="{{ g.course }}" placeholder="Kurs" aria-label="Kurs"></div>
+  <div class="col-md-2"><input class="form-control" type="number" name="year" value="{{ g.year }}" placeholder="Bitiruv yili" aria-label="Bitiruv yili"></div>
+  <div class="col-md-2 d-flex gap-2"><button class="btn btn-brand flex-grow-1">Filtr</button><a class="btn btn-outline-secondary" href="?" aria-label="Tozalash"><i class="bi bi-x-lg"></i></a></div>
+</div></form>
+<div class="panel"><div class="table-responsive"><table class="table table-hover">
+  <thead><tr><th>Talaba / bitiruvchi</th><th>Fakultet va yo'nalish</th><th>Kurs yoki yil</th><th>Bandlik</th><th>Tashkilot</th><th></th></tr></thead>
+  <tbody>
+  {% for p in page %}
+    <tr>
+      <td><div class="d-flex align-items-center gap-2"><span class="avatar-sm">{{ p.user|initials }}</span><div><a class="text-decoration-none fw-medium" href="{% url 'students:monitor_detail' p.pk %}">{{ p.user.full_name|default:p.user.username }}</a><div class="small text-muted">{{ p.user.get_role_display }}</div></div></div></td>
+      <td class="small">{{ p.faculty|default:"—" }}<div class="text-muted">{{ p.direction|default:"—" }}</div></td>
+      <td>{% if p.is_graduate %}{{ p.graduation_year|default_if_none:"—"|stringformat:"s" }}{% else %}{{ p.course|default_if_none:"—" }}-kurs{% endif %}</td>
+      <td><span class="badge text-bg-{{ p.status_badge }}">{{ p.get_employment_status_display }}</span></td>
+      <td class="small">{{ p.employer_name|default:"—" }}</td>
+      <td class="text-end text-nowrap"><a class="btn btn-sm btn-outline-primary" href="{% url 'students:monitor_detail' p.pk %}">Ko'rish</a>{% if can_edit %} <a class="btn btn-sm btn-outline-secondary" href="{% url 'students:monitor_edit' p.pk %}">Tahrirlash</a>{% endif %}</td>
+    </tr>
+  {% empty %}<tr><td colspan="6">{% include "includes/empty.html" with title="Mos yozuv topilmadi" text="Filtrlarni o'zgartirib ko'ring." url="?" action="Filtrlarni tozalash" %}</td></tr>{% endfor %}
+  </tbody></table></div></div>
+{% include "includes/pagination.html" %}
+{% endblock %}

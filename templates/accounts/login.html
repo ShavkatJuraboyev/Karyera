@@ -1,0 +1,19 @@
+{% extends "auth_base.html" %}
+{% block title %}Kirish{% endblock %}
+{% block content %}
+  <h2>Qaytganingizdan xursandmiz</h2>
+  <p class="sub">Hisobingizga kirish uchun login va parolni kiriting.</p>
+  <form method="post" novalidate>
+    {% csrf_token %}
+    <input type="hidden" name="next" value="{{ next }}">
+    {% include "includes/form_fields.html" %}
+    <button class="btn btn-brand btn-lg w-100 mt-1" type="submit">Kirish</button>
+  </form>
+  <div class="mt-3 text-center"><a href="{% url 'accounts:password_reset' %}">Parolni unutdingizmi?</a></div>
+  <hr class="my-4">
+  <p class="text-center text-muted mb-2">Hisobingiz yo'qmi?</p>
+  <div class="d-grid gap-2 d-sm-flex justify-content-center">
+    <a class="btn btn-outline-primary" href="{% url 'accounts:register' %}">Talaba yoki bitiruvchi</a>
+    <a class="btn btn-outline-primary" href="{% url 'accounts:register_employer' %}">Ish beruvchi</a>
+  </div>
+{% endblock %}

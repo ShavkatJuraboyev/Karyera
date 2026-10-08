@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% load karyera_tags %}
+{% block title %}Profil{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="page-head"><div><h1>Mening profilim</h1><p>Ish beruvchilar shu ma'lumotlar asosida sizni baholaydi.</p></div>
+    <div class="actions">
+      <a class="btn btn-outline-secondary" href="{% url 'students:cv' %}"><i class="bi bi-file-earmark-person me-1"></i>Rezyume</a>
+      <a class="btn btn-brand" href="{% url 'students:profile_edit' %}"><i class="bi bi-pencil me-1"></i>Tahrirlash</a>
+    </div></div>
+  <div class="row g-4">
+    <div class="col-lg-4">
+      <div class="panel panel-pad profile-summary sticky-side">
+        <div class="d-flex align-items-center gap-3 mb-3">
+          {% if profile.photo %}<img class="avatar" src="{% url 'students:file' 'photo' profile.pk %}" alt="">{% else %}<div class="avatar d-grid" style="place-items:center;font-size:2rem">{{ user|initials }}</div>{% endif %}
+          <div><div class="h5 mb-0">{{ user.full_name }}</div><div class="text-muted small">{{ user.get_role_display }}</div></div>
+        </div>
+        <div class="d-flex align-items-center gap-3 p-3 mb-3" style="background:var(--surface-2);border-radius:12px">
+          <div class="ring" style="--p:{{ profile.completeness }}"><span>{{ profile.completeness }}%</span></div>
+          <div class="small"><b>Profil to'liqligi</b><div class="text-muted">{% if profile.completeness >= 80 %}Ajoyib, profil tayyor.{% else %}Qolgan bo'limlarni to'ldiring.{% endif %}</div></div>
+        </div>
+        <dl>
+          <div><dt>Fakultet</dt><dd>{{ profile.faculty|default:"—" }}</dd></div>
+          <div><dt>Yo'nalish</dt><dd>{{ profile.direction|default:"—" }}</dd></div>
+          <div><dt>{% if profile.is_graduate %}Bitiruv yili{% else %}Kurs{% endif %}</dt><dd>{% if profile.is_graduate %}{{ profile.graduation_year|default_if_none:"—"|stringformat:"s" }}{% else %}{{ profile.course|default_if_none:"—" }}{% endif %}</dd></div>
+          <div><dt>Telefon</dt><dd>{{ user.phone|default:"—" }}</dd></div>
+          <div><dt>E-mail</dt><dd class="truncate" style="max-width:190px">{{ user.email|default:"—" }}</dd></div>
+          <div><dt>Bandlik</dt><dd><span class="badge text-bg-{{ profile.status_badge }}">{{ profile.get_employment_status_display }}</span></dd></div>
+          {% if profile.employer_name %}<div><dt>Ish joyi</dt><dd>{{ profile.position }}, {{ profile.employer_name }}</dd></div>{% endif %}
+        </dl>
+      </div>
+    </div>
+    <div class="col-lg-8">
+      <div class="panel mb-3">
+        <div class="panel-head"><h2>O'zim haqimda</h2><a class="btn btn-sm btn-outline-secondary" href="{% url 'students:profile_edit' %}">Tahrirlash</a></div>
+        <div class="panel-pad">
+          {% if profile.about or profile.desired_position %}
+            {% if profile.desired_position %}<p class="mb-2"><span class="text-muted">Maqsad:</span> <b>{{ profile.desired_position }}</b></p>{% endif %}
+            <div class="pre-wrap">{{ profile.about }}</div>
+          {% else %}<span class="text-muted">Kasbiy maqsad va qisqa tanishtiruv qo'shing, rezyumeda eng tepada ko'rinadi.</span>{% endif %}
+        </div>
+      </div>
+      {% for key, label, items in sections %}
+      <div class="panel mb-3">
+        <div class="panel-head"><h2>{{ label }}</h2><a class="btn btn-sm btn-outline-primary" href="{% url 'students:section_add' key %}"><i class="bi bi-plus-lg me-1"></i>Qo'shish</a></div>
+        <ul class="rowlist">
+        {% for it in items %}
+          <li>
+            <div class="grow">
+              {% if key == 'skills' %}<div class="title">{{ it.name }}</div><div class="sub">{{ it.get_level_display }}</div>
+              {% elif key == 'languages' %}<div class="title">{{ it.language }}</div><div class="sub">{{ it.get_level_display }}</div>
+              {% elif key == 'experiences' %}<div class="title">{{ it.position }}, {{ it.company }}</div><div class="sub">{{ it.start_date|date:"m.Y" }} — {% if it.end_date %}{{ it.end_date|date:"m.Y" }}{% else %}hozirgacha{% endif %}</div>{% if it.description %}<div class="small mt-1 pre-wrap">{{ it.description }}</div>{% endif %}
+              {% elif key == 'certificates' %}<div class="title">{{ it.title }}</div><div class="sub">{{ it.issuer }}{% if it.issue_date %} {{ it.issue_date|date:"Y" }}{% endif %}{% if it.file %} <a href="{% url 'students:file' 'certificate' it.pk %}" target="_blank">Faylni ochish</a>{% endif %}</div>
+              {% elif key == 'portfolio' %}<div class="title">{{ it.title }}</div><div class="sub">{% if it.url %}<a href="{{ it.url }}" target="_blank" rel="noopener noreferrer">{{ it.url|truncatechars:48 }}</a> {% endif %}{% if it.file %}<a href="{% url 'students:file' 'portfolio' it.pk %}" target="_blank">Fayl</a>{% endif %}</div>{% if it.description %}<div class="small mt-1">{{ it.description }}</div>{% endif %}
+              {% endif %}
+            </div>
+            <div class="d-flex gap-1">
+              <a class="icon-btn" style="width:34px;height:34px" href="{% url 'students:section_edit' key it.pk %}" aria-label="Tahrirlash" title="Tahrirlash"><i class="bi bi-pencil"></i></a>
+              <form method="post" action="{% url 'students:section_delete' key it.pk %}" data-confirm="O'chirishni tasdiqlaysizmi?">{% csrf_token %}<button class="icon-btn" style="width:34px;height:34px;color:var(--i-danger)" aria-label="O'chirish" title="O'chirish"><i class="bi bi-trash"></i></button></form>
+            </div>
+          </li>
+        {% empty %}
+          <li><span class="text-muted">Hali qo'shilmagan.</span></li>
+        {% endfor %}
+        </ul>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>
+{% endblock %}
