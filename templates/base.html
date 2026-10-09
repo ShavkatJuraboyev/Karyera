@@ -1,11 +1,12 @@
-{% load static karyera_tags %}<!DOCTYPE html>
+{% load static karyera_tags %}
+<!DOCTYPE html>
 <html lang="uz" data-bs-theme="light">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>{% block title %}Karyera SIES{% endblock %} — Karyera SIES</title>
+  <title>{% block title %}Karyera{% endblock %} — Karyera</title>
   <meta name="description" content="{% block meta_description %}Samarqand iqtisodiyot va servis instituti talabalari va bitiruvchilari uchun vakansiyalar, ish beruvchilar va karyera tadbirlari.{% endblock %}">
-  <meta property="og:title" content="{% block og_title %}Karyera SIES{% endblock %}">
+  <meta property="og:title" content="{% block og_title %}Karyera{% endblock %}">
   <meta property="og:type" content="website">
   {% include "includes/head_assets.html" %}
   {% block extra_head %}{% endblock %}
@@ -20,7 +21,7 @@
     <div class="sidebar-inner">
       <a class="sb-brand" href="{% url 'core:home' %}">
         <svg class="brand-mark" aria-hidden="true"><use href="#brand-mark"/></svg>
-        <span><b>Karyera SIES</b><small>Samarqand iqtisodiyot va servis instituti</small></span>
+        <span><b>Karyera</b><small></small></span>
       </a>
       <nav class="sb-nav">
         <a class="sb-link {% nav_active '/' %}" href="{% url 'core:home' %}"><i class="bi bi-house-door"></i>Bosh sahifa</a>
@@ -130,7 +131,7 @@
   <div class="container inner">
     <a class="site-brand" href="{% url 'core:home' %}">
       <svg class="brand-mark" aria-hidden="true"><use href="#brand-mark"/></svg>
-      <span><b>Karyera SIES</b><small>Samarqand iqtisodiyot va servis instituti</small></span>
+      <span><b>Karyera</b><small>Samarqand iqtisodiyot va servis instituti</small></span>
     </a>
     <nav class="site-nav" aria-label="Asosiy menyu">
       <a class="{% nav_active '/vakansiyalar/' %}" href="{% url 'vacancies:list' %}">Vakansiyalar</a>
@@ -174,7 +175,7 @@
   <div class="container">
     <div class="row g-4">
       <div class="col-lg-5">
-        <div class="site-brand mb-3"><svg class="brand-mark" aria-hidden="true"><use href="#brand-mark"/></svg><span><b>Karyera SIES</b></span></div>
+        <div class="site-brand mb-3"><svg class="brand-mark" aria-hidden="true"><use href="#brand-mark"/></svg><span><b>Karyera</b></span></div>
         <p style="max-width:42ch">Samarqand iqtisodiyot va servis instituti talabalari, bitiruvchilari va ish beruvchilarini bog'lovchi yagona karyera platformasi.</p>
       </div>
       <div class="col-6 col-lg-3"><h3>Platforma</h3><ul>
