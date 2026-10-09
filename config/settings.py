@@ -175,7 +175,7 @@ if os.environ.get("EMAIL_HOST"):
     EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", True)
 else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "karyera@gmail.uz")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "devpysh@gmail.com")
 EMAIL_NOTIFICATIONS = env_bool("EMAIL_NOTIFICATIONS", True)
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 SMS_GATEWAY_URL = os.environ.get("SMS_GATEWAY_URL", "")  # kelgusida SMS shlyuzi uchun
