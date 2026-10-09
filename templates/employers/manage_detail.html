@@ -22,7 +22,7 @@
         <div><dt>Mas'ul shaxs</dt><dd>{{ employer.contact_name }}{% if employer.contact_position %}, {{ employer.contact_position }}{% endif %}<div class="text-muted small">{{ employer.contact_phone }}</div></dd></div>
         <div><dt>Ro'yxatdan o'tgan</dt><dd>{{ employer.created_at|date:"d.m.Y H:i" }}</dd></div></dl></div>
       <div class="panel mb-3"><div class="panel-head"><h2>Vakansiyalar</h2></div>
-        <ul class="rowlist">{% for v in vacancies %}<a href="{% url 'vacancies:manage_detail' v.pk %}"><div class="grow"><div class="title">{{ v.title }}</div><div class="sub">Arizalar: {{ v.app_count }}</div></div><span class="badge text-bg-{{ v.status_badge }}">{{ v.get_status_display }}</span></a>{% empty %}<li class="text-muted">Vakansiya yo'q</li>{% endfor %}</ul></div>
+        <div class="rowlist">{% for v in vacancies %}<a href="{% url 'vacancies:manage_detail' v.pk %}"><div class="grow"><div class="title">{{ v.title }}</div><div class="sub">Arizalar: {{ v.app_count }}</div></div><span class="badge text-bg-{{ v.status_badge }}">{{ v.get_status_display }}</span></a>{% empty %}<div class="row-item text-muted">Vakansiya yo'q</div>{% endfor %}</div></div>
       <div class="panel"><div class="panel-head"><h2>Nomzodlar bilan ishlash tarixi</h2></div>
         <ul class="rowlist">{% for a in history %}<li><div class="grow"><div class="title">{{ a.applicant.full_name }}</div><div class="sub">{{ a.vacancy.title }}, {{ a.created_at|date:"d.m.Y" }}</div></div><span class="badge text-bg-{{ a.status_badge }}">{{ a.get_status_display }}</span></li>{% empty %}<li class="text-muted">Tarix bo'sh</li>{% endfor %}</ul></div>
     </div>

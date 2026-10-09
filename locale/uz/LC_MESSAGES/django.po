@@ -1,0 +1,56 @@
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Karyera SIES\n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid "Your password can’t be too similar to your other personal information."
+msgstr ""
+"Parol ism, e-mail kabi shaxsiy ma’lumotlaringizga juda o‘xshash bo‘lmasin."
+
+msgid "Your password can’t be a commonly used password."
+msgstr "Parol juda oddiy, ko‘p ishlatiladigan (masalan, qwerty123) bo‘lmasin."
+
+msgid "Your password can’t be entirely numeric."
+msgstr "Parol faqat raqamlardan iborat bo‘lmasin."
+
+msgid "The password is too similar to the %(verbose_name)s."
+msgstr "Parol %(verbose_name)s ga juda o‘xshash. Boshqa parol tanlang."
+
+msgid "This password is too common."
+msgstr "Bu parol juda oddiy. Murakkabroq parol tanlang."
+
+msgid "This password is entirely numeric."
+msgstr "Parol faqat raqamlardan iborat bo‘lmasligi kerak."
+
+msgid ""
+"Enter a valid username. This value may contain only unaccented lowercase a-z"
+" and uppercase A-Z letters, numbers, and @/./+/-/_ characters."
+msgstr ""
+"Login faqat lotin harflari, raqamlar va @ . + - _ belgilaridan iborat "
+"bo‘lishi mumkin."
+
+msgid "A user with that username already exists."
+msgstr "Bu login band. Boshqa login tanlang."
+
+msgid ""
+"Enter a valid username. This value may contain only English letters, "
+"numbers, and @/./+/-/_ characters."
+msgstr ""
+"Login faqat lotin harflari, raqamlar va @ . + - _ belgilaridan iborat "
+"bo‘lishi mumkin."
+
+msgid "Your password must contain at least %(min_length)d character."
+msgid_plural "Your password must contain at least %(min_length)d characters."
+msgstr[0] "Parol kamida %(min_length)d ta belgidan iborat bo‘lsin."
+msgstr[1] "Parol kamida %(min_length)d ta belgidan iborat bo‘lsin."
+
+msgid "This password is too short. It must contain at least %d character."
+msgid_plural ""
+"This password is too short. It must contain at least %d characters."
+msgstr[0] "Parol juda qisqa. Kamida %d ta belgi kiriting."
+msgstr[1] "Parol juda qisqa. Kamida %d ta belgi kiriting."

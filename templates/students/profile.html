@@ -31,6 +31,19 @@
       </div>
     </div>
     <div class="col-lg-8">
+      {% if profile.completeness < 100 %}
+      <div class="panel mb-3">
+        <div class="panel-head"><h2>Profilni to'ldirish uchun keyingi qadamlar</h2><span class="badge text-bg-primary">{{ profile.completeness }}%</span></div>
+        <ul class="todo panel-pad" style="padding-top:.6rem;padding-bottom:.6rem">
+          <li class="{% if profile.photo %}done{% endif %}"><span class="ck">{% if profile.photo %}<i class="bi bi-check-lg"></i>{% endif %}</span><span class="t">Profil rasmini yuklang</span>{% if not profile.photo %}<a href="{% url 'students:profile_edit' %}">Yuklash</a>{% endif %}</li>
+          <li class="{% if profile.desired_position and profile.about %}done{% endif %}"><span class="ck">{% if profile.desired_position and profile.about %}<i class="bi bi-check-lg"></i>{% endif %}</span><span class="t">Kasbiy maqsad va o'zingiz haqingizda yozing</span>{% if not profile.desired_position or not profile.about %}<a href="{% url 'students:profile_edit' %}">Yozish</a>{% endif %}</li>
+          <li class="{% if profile.birth_date and profile.region %}done{% endif %}"><span class="ck">{% if profile.birth_date and profile.region %}<i class="bi bi-check-lg"></i>{% endif %}</span><span class="t">Tug'ilgan sana va hududni kiriting</span>{% if not profile.birth_date or not profile.region %}<a href="{% url 'students:profile_edit' %}">Kiritish</a>{% endif %}</li>
+          <li class="{% if profile.skills.exists %}done{% endif %}"><span class="ck">{% if profile.skills.exists %}<i class="bi bi-check-lg"></i>{% endif %}</span><span class="t">Kamida bitta ko'nikma qo'shing</span>{% if not profile.skills.exists %}<a href="{% url 'students:section_add' 'skills' %}">Qo'shish</a>{% endif %}</li>
+          <li class="{% if profile.languages.exists %}done{% endif %}"><span class="ck">{% if profile.languages.exists %}<i class="bi bi-check-lg"></i>{% endif %}</span><span class="t">Til bilimingizni ko'rsating</span>{% if not profile.languages.exists %}<a href="{% url 'students:section_add' 'languages' %}">Qo'shish</a>{% endif %}</li>
+          <li class="{% if profile.experiences.exists or profile.certificates.exists or profile.portfolio.exists %}done{% endif %}"><span class="ck">{% if profile.experiences.exists or profile.certificates.exists or profile.portfolio.exists %}<i class="bi bi-check-lg"></i>{% endif %}</span><span class="t">Tajriba, sertifikat yoki loyiha qo'shing</span>{% if not profile.experiences.exists and not profile.certificates.exists and not profile.portfolio.exists %}<a href="{% url 'students:section_add' 'experiences' %}">Qo'shish</a>{% endif %}</li>
+        </ul>
+      </div>
+      {% endif %}
       <div class="panel mb-3">
         <div class="panel-head"><h2>O'zim haqimda</h2><a class="btn btn-sm btn-outline-secondary" href="{% url 'students:profile_edit' %}">Tahrirlash</a></div>
         <div class="panel-pad">
@@ -43,9 +56,9 @@
       {% for key, label, items in sections %}
       <div class="panel mb-3">
         <div class="panel-head"><h2>{{ label }}</h2><a class="btn btn-sm btn-outline-primary" href="{% url 'students:section_add' key %}"><i class="bi bi-plus-lg me-1"></i>Qo'shish</a></div>
-        <ul class="rowlist">
+        <div class="rowlist">
         {% for it in items %}
-          <li>
+          <div class="row-item">
             <div class="grow">
               {% if key == 'skills' %}<div class="title">{{ it.name }}</div><div class="sub">{{ it.get_level_display }}</div>
               {% elif key == 'languages' %}<div class="title">{{ it.language }}</div><div class="sub">{{ it.get_level_display }}</div>
@@ -58,11 +71,11 @@
               <a class="icon-btn" style="width:34px;height:34px" href="{% url 'students:section_edit' key it.pk %}" aria-label="Tahrirlash" title="Tahrirlash"><i class="bi bi-pencil"></i></a>
               <form method="post" action="{% url 'students:section_delete' key it.pk %}" data-confirm="O'chirishni tasdiqlaysizmi?">{% csrf_token %}<button class="icon-btn" style="width:34px;height:34px;color:var(--i-danger)" aria-label="O'chirish" title="O'chirish"><i class="bi bi-trash"></i></button></form>
             </div>
-          </li>
+          </div>
         {% empty %}
-          <li><span class="text-muted">Hali qo'shilmagan.</span></li>
+          <div class="row-item"><span class="text-muted">Hali qo'shilmagan.</span></div>
         {% endfor %}
-        </ul>
+        </div>
       </div>
       {% endfor %}
     </div>

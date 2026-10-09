@@ -14,7 +14,7 @@
 <div class="kpis mb-3">
   <div class="kpi"><div class="kpi-label">Talabalar</div><div class="kpi-value">{{ d.students_total }}</div></div>
   <div class="kpi"><div class="kpi-label">Bitiruvchilar</div><div class="kpi-value">{{ d.graduates_total }}</div><div class="kpi-note">Ish izlayotganlar: {{ d.looking }}</div></div>
-  <div class="kpi"><div class="kpi-label">Ishga joylashgan bitiruvchilar</div><div class="kpi-value">{{ d.hired }}</div><div class="kpi-note">Bandlik darajasi: {{ d.employment_rate }}%</div><div class="progress" role="progressbar" aria-valuenow="{{ d.employment_rate }}" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar" style="width:{{ d.employment_rate }}%"></div></div></div>
+  <div class="kpi"><div class="kpi-label">Ishga joylashgan bitiruvchilar</div><div class="kpi-value">{{ d.hired }}</div><div class="kpi-note">Bandlik darajasi: {{ d.employment_rate }}%</div><div class="progress" role="progressbar" aria-label="Bandlik darajasi" aria-valuenow="{{ d.employment_rate|stringformat:'g' }}" aria-valuemin="0" aria-valuemax="100"><div class="progress-bar" style="width:{{ d.employment_rate|stringformat:'g' }}%"></div></div></div>
   <div class="kpi"><div class="kpi-label">Faol vakansiyalar</div><div class="kpi-value">{{ d.vacancies_active }}</div><div class="kpi-note">Ish beruvchilar: {{ d.employers_total }}</div></div>
 </div>
 <div class="kpis mb-4">

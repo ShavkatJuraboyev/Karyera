@@ -1,4 +1,5 @@
 {% extends "base.html" %}
+{% load karyera_tags %}
 {% block title %}Vakansiyalar{% endblock %}
 {% block content %}
 <div class="container">
@@ -17,6 +18,15 @@
     </div>
     <div class="col-lg-9">
       <div class="text-muted small mb-3">Topildi: <b class="text-body">{{ page.paginator.count }}</b></div>
+      {% if g.q or g.direction or g.region or g.type or g.salary %}
+      <div class="active-filters" aria-label="Faol filtrlar">
+        {% if g.q %}<a class="fchip" href="?{% qs_remove 'q' %}">«{{ g.q }}»<i class="bi bi-x-lg" aria-hidden="true"></i><span class="visually-hidden">Filtrni olib tashlash</span></a>{% endif %}
+        {% if g.direction %}{% for d in directions %}{% if g.direction == d.pk|stringformat:"s" %}<a class="fchip" href="?{% qs_remove 'direction' %}">{{ d.name }}<i class="bi bi-x-lg" aria-hidden="true"></i><span class="visually-hidden">Filtrni olib tashlash</span></a>{% endif %}{% endfor %}{% endif %}
+        {% if g.region %}<a class="fchip" href="?{% qs_remove 'region' %}">{{ g.region }}<i class="bi bi-x-lg" aria-hidden="true"></i><span class="visually-hidden">Filtrni olib tashlash</span></a>{% endif %}
+        {% if g.type %}{% for v, l in types %}{% if g.type == v %}<a class="fchip" href="?{% qs_remove 'type' %}">{{ l }}<i class="bi bi-x-lg" aria-hidden="true"></i><span class="visually-hidden">Filtrni olib tashlash</span></a>{% endif %}{% endfor %}{% endif %}
+        {% if g.salary %}<a class="fchip" href="?{% qs_remove 'salary' %}">Kamida {{ g.salary }} so'm<i class="bi bi-x-lg" aria-hidden="true"></i><span class="visually-hidden">Filtrni olib tashlash</span></a>{% endif %}
+      </div>
+      {% endif %}
       {% for v in page %}{% include "includes/vacancy_card.html" %}{% empty %}
         <div class="panel">{% include "includes/empty.html" with title="Mos vakansiya topilmadi" text="Filtrlarni kamaytiring yoki boshqa so'z bilan qidirib ko'ring." url="?" action="Filtrlarni tozalash" %}</div>{% endfor %}
       {% include "includes/pagination.html" %}

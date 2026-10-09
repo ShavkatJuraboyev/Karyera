@@ -1,0 +1,23 @@
+<dialog id="confirm-dialog" class="dlg" aria-labelledby="cd-title">
+  <form method="dialog" data-no-lock>
+    <div class="dlg-body">
+      <div class="dlg-icon" aria-hidden="true"><i class="bi bi-exclamation-triangle"></i></div>
+      <h2 id="cd-title">Tasdiqlang</h2>
+      <p id="cd-text"></p>
+    </div>
+    <div class="dlg-actions">
+      <button class="btn btn-outline-secondary" value="cancel" type="submit">Bekor qilish</button>
+      <button class="btn btn-danger" value="ok" id="cd-ok" type="submit">Davom etish</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="palette" class="dlg palette" aria-label="Tezkor menyu">
+  <div class="pal-search">
+    <i class="bi bi-search" aria-hidden="true"></i>
+    <input id="pal-input" type="text" placeholder="Bo'lim yoki vakansiya qidiring..." autocomplete="off" aria-label="Tezkor qidiruv" role="combobox" aria-expanded="true" aria-controls="pal-list">
+    <kbd>Esc</kbd>
+  </div>
+  <ul id="pal-list" class="pal-list" role="listbox" aria-label="Natijalar"></ul>
+  <div class="pal-foot"><span><kbd>↑</kbd><kbd>↓</kbd> tanlash</span><span><kbd>Enter</kbd> ochish</span><span><kbd>Ctrl</kbd><kbd>K</kbd> yoki <kbd>/</kbd> qayta ochish</span></div>
+</dialog>

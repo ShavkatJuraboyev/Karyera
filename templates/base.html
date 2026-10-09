@@ -4,6 +4,9 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>{% block title %}Karyera SIES{% endblock %} — Karyera SIES</title>
+  <meta name="description" content="{% block meta_description %}Samarqand iqtisodiyot va servis instituti talabalari va bitiruvchilari uchun vakansiyalar, ish beruvchilar va karyera tadbirlari.{% endblock %}">
+  <meta property="og:title" content="{% block og_title %}Karyera SIES{% endblock %}">
+  <meta property="og:type" content="website">
   {% include "includes/head_assets.html" %}
   {% block extra_head %}{% endblock %}
 </head>
@@ -97,14 +100,27 @@
       <form class="search" action="{% url 'vacancies:list' %}" method="get" role="search">
         <i class="bi bi-search" aria-hidden="true"></i>
         <input class="form-control" type="search" name="q" placeholder="Vakansiya qidirish" aria-label="Vakansiya qidirish" autocomplete="off">
+        <button class="kbd-hint d-none d-xl-inline-flex" type="button" data-palette-open aria-label="Tezkor menyuni ochish (Ctrl K)"><kbd>Ctrl</kbd><kbd>K</kbd></button>
       </form>
       <div class="ms-auto d-flex align-items-center gap-1">
         <button class="icon-btn" type="button" data-theme-toggle aria-label="Mavzuni almashtirish" title="Yorug' / qorong'i rejim">
           <i class="bi bi-moon-stars theme-icon-light"></i><i class="bi bi-sun theme-icon-dark"></i>
         </button>
-        <a class="icon-btn" href="{% url 'core:notifications' %}" aria-label="Bildirishnomalar{% if unread_notifications %} ({{ unread_notifications }} ta yangi){% endif %}" title="Bildirishnomalar">
-          <i class="bi bi-bell"></i>{% if unread_notifications %}<span class="dot">{{ unread_notifications }}</span>{% endif %}
-        </a>
+        <div class="dropdown">
+          <button class="icon-btn" type="button" data-bs-toggle="dropdown" data-bs-auto-close="outside" aria-expanded="false" aria-label="Bildirishnomalar{% if unread_notifications %} ({{ unread_notifications }} ta yangi){% endif %}" title="Bildirishnomalar">
+            <i class="bi bi-bell"></i>{% if unread_notifications %}<span class="dot">{{ unread_notifications }}</span>{% endif %}
+          </button>
+          <div class="dropdown-menu dropdown-menu-end notif-menu">
+            <div class="notif-head"><b>Bildirishnomalar</b>{% if unread_notifications %}<span class="badge text-bg-primary">{{ unread_notifications }} ta yangi</span>{% endif %}</div>
+            {% for n in recent_notifications %}
+              <a class="notif-item{% if not n.is_read %} unread{% endif %}" href="{% url 'core:notification_open' n.pk %}">
+                <span class="n-dot" aria-hidden="true"></span>
+                <span class="n-body"><span class="n-title">{{ n.title }}</span>{% if n.message %}<span class="n-text">{{ n.message|truncatechars:70 }}</span>{% endif %}<span class="n-time">{{ n.created_at|date:"d.m.Y H:i" }}</span></span>
+              </a>
+            {% empty %}<div class="notif-empty">Hozircha xabar yo'q.</div>{% endfor %}
+            <a class="notif-foot" href="{% url 'core:notifications' %}">Barcha bildirishnomalar</a>
+          </div>
+        </div>
       </div>
     </header>
     <main id="main" class="shell-body" tabindex="-1">
@@ -174,7 +190,9 @@
 {% endif %}
 
 {% include "includes/flash.html" %}
+{% include "includes/dialogs.html" %}
 <script src="{% static 'vendor/bootstrap/bootstrap.bundle.min.js' %}"></script>
+<script src="{% static 'js/pro.js' %}"></script>
 <script src="{% static 'js/app.js' %}"></script>
 {% block extra_js %}{% endblock %}
 </body>

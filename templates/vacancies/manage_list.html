@@ -8,7 +8,7 @@
   <div class="col-md-2"><button class="btn btn-brand w-100">Qidirish</button></div>
 </form>
 <div class="panel"><div class="table-responsive"><table class="table table-hover">
-  <thead><tr><th>Lavozim</th><th>Tashkilot</th><th>Holati</th><th>Muddat</th><th>Arizalar</th><th></th></tr></thead><tbody>
+  <thead><tr><th>Lavozim</th><th>Tashkilot</th><th>Holati</th><th>Muddat</th><th>Arizalar</th><th><span class="visually-hidden">Amallar</span></th></tr></thead><tbody>
   {% for v in page %}<tr><td><a class="text-decoration-none fw-medium" href="{% url 'vacancies:manage_detail' v.pk %}">{{ v.title }}</a></td><td>{{ v.employer.name }}</td>
     <td><span class="badge text-bg-{{ v.status_badge }}">{{ v.get_status_display }}</span></td><td>{{ v.deadline|date:"d.m.Y" }}</td><td>{{ v.app_count }}</td>
     <td class="text-end"><a class="btn btn-sm btn-outline-primary" href="{% url 'vacancies:manage_detail' v.pk %}">Ko'rib chiqish</a></td></tr>

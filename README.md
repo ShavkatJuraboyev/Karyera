@@ -1,7 +1,7 @@
 # Karyera — axborot tizimi
 
 Samarqand iqtisodiyot va servis instituti Karyera markazi uchun Django asosidagi veb-platforma
-(texnik topshiriq: «Karyera SIES» axborot tizimini ishlab chiqish).
+(texnik topshiriq: «Karyera» axborot tizimini ishlab chiqish).
 
 Texnologiyalar: Python 3.10+, Django 5, Django REST Framework, Bootstrap 5, Chart.js, openpyxl (Excel), reportlab (PDF).
 
@@ -23,7 +23,6 @@ Brauzerda: http://127.0.0.1:8000/
 Demo foydalanuvchilar (`seed_demo` dan keyin, parol hammasiga **Demo12345!**):
 `admin`, `staff`, `dean`, `rector`, `employer1`..`employer5`, `student1`..`student40`.
 
-> Internet kerak: Bootstrap, ikonkalar va Chart.js CDN orqali yuklanadi.
 
 ## 2. Testlar
 
@@ -136,3 +135,29 @@ reports/     dashboard, hisobotlar
 api/         REST API
 templates/ static/
 ```
+
+## 12. Frontend dizayni
+
+- **Hammasi loyiha ichida:** Bootstrap 5, Bootstrap Icons, Chart.js va shriftlar (`static/vendor`, `static/fonts`) —
+  internet yoki CDN kerak emas (offline va yopiq tarmoqda ham ishlaydi).
+- **Dizayn tizimi:** `static/css/app.css` — tokenlar (`:root`), yorug' va qorong'i mavzu (`data-bs-theme`), komponentlar.
+  Ranglar Samarqand me'morchiligidan olingan: lojuvard ko'k, firuza, za'faron. Shriftlar: Bricolage Grotesque + Onest.
+- **Maket:** mehmon uchun yuqori sarlavha; kirgan foydalanuvchi uchun rolga qarab o'zgaradigan yon panel va yuqori satr
+  (`templates/base.html`). Kirish/ro'yxatdan o'tish uchun alohida ikki ustunli maket (`templates/auth_base.html`).
+- **Rezyume (CV):** ekranda va chop etishda A4 varaq (`templates/students/_cv.html`), PDF — `students/pdf.py`
+  (ikkalasi bir xil ko'rinishda: yon panel, ko'nikma darajalari, ish tajribasi vaqt chizig'i).
+- **Qulaylik:** mobil moslashuv, klaviatura fokusi, «asosiy mazmunga o'tish» havolasi, `prefers-reduced-motion`,
+  ikki marta bosishdan himoya, o'zi yopiladigan xabarlar, mavzu tanlovi eslab qolinadi.
+- **Matnlar:** parol va login xabarlari o'zbekchaga o'tkazilgan (`locale/uz/LC_MESSAGES/django.po` / `.mo`).
+
+### Qo'shimcha interfeys imkoniyatlari
+
+- **Tezkor menyu:** `Ctrl+K` (Mac: `⌘K`) yoki `/` — bo'limlar bo'yicha qidiruv va vakansiyalarni jonli qidirish (`/api/v1/vacancies/`).
+- **Tasdiqlash oynasi:** `data-confirm` bilan belgilangan formalar (o'chirish, bekor qilish, yopish) brauzer oynasi o'rniga chiroyli dialog ochadi.
+- **Bildirishnomalar menyusi:** yuqori satrdagi qo'ng'iroqda oxirgi 5 ta xabar.
+- **Formalar:** parolni ko'rsatish tugmasi, rasmni oldindan ko'rish va 5 MB dan katta faylni yuklashdan oldin rad etish,
+  ta'lim yo'nalishlarini qidiruv bilan tanlash.
+- **Vakansiyalar:** faol filtrlar chiplar ko'rinishida (bittadan olib tashlash mumkin).
+- **Profil:** «keyingi qadamlar» ro'yxati — nima to'ldirilmaganini va qayerdan to'ldirishni ko'rsatadi.
+- **Qulaylik (a11y):** `axe-core` (WCAG 2.1 AA) bilan 14 ta asosiy sahifa yorug' va qorong'i mavzuda tekshirilgan — kamchilik topilmadi.
+  Matnlar kontrasti, klaviatura bilan boshqarish, ekran o'qigichlar uchun yorliqlar, `prefers-reduced-motion` hisobga olingan.

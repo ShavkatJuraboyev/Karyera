@@ -74,12 +74,7 @@
   }
   if (status) { status.addEventListener("change", toggleEmployment); toggleEmployment(); }
 
-  /* ---------- Tasdiqlash va ikki marta bosishdan himoya ---------- */
-  document.querySelectorAll("form[data-confirm]").forEach(function (f) {
-    f.addEventListener("submit", function (e) {
-      if (!window.confirm(f.getAttribute("data-confirm"))) e.preventDefault();
-    });
-  });
+  /* ---------- Ikki marta bosishdan himoya (tasdiqlash oynasi pro.js da) ---------- */
   document.querySelectorAll("form").forEach(function (f) {
     if (f.hasAttribute("data-no-lock") || (f.method || "").toLowerCase() === "get") return;
     f.addEventListener("submit", function (e) {

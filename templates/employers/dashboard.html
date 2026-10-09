@@ -26,17 +26,17 @@
   <div class="row g-4">
     <div class="col-lg-8"><div class="panel">
       <div class="panel-head"><h2>So'nggi arizalar</h2><a class="small fw-medium text-decoration-none" href="{% url 'vacancies:employer_applications' %}">Hammasi<i class="bi bi-chevron-right ms-1"></i></a></div>
-      <ul class="rowlist">
+      <div class="rowlist">
       {% for a in recent_applications %}
         <a href="{% url 'vacancies:employer_application' a.pk %}"><span class="avatar-sm">{{ a.applicant.first_name|slice:":1"|upper }}{{ a.applicant.last_name|slice:":1"|upper }}</span>
           <div class="grow"><div class="title">{{ a.applicant.full_name }}</div><div class="sub truncate">{{ a.vacancy.title }}</div></div>
           <div class="text-end"><span class="badge text-bg-{{ a.status_badge }}">{{ a.get_status_display }}</span><div class="sub">{{ a.created_at|date:"d.m.Y" }}</div></div></a>
-      {% empty %}<li>{% include "includes/empty.html" with title="Hozircha arizalar yo'q" text="Vakansiya e'lon qilingach nomzodlar arizalari shu yerda ko'rinadi." %}</li>{% endfor %}
-      </ul></div></div>
+      {% empty %}<div class="row-item">{% include "includes/empty.html" with title="Hozircha arizalar yo'q" text="Vakansiya e'lon qilingach nomzodlar arizalari shu yerda ko'rinadi." %}</div>{% endfor %}
+      </div></div></div>
     <div class="col-lg-4"><div class="panel">
       <div class="panel-head"><h2>Yaqin tadbirlar</h2></div>
-      <ul class="rowlist">{% for e in events %}<a href="{{ e.get_absolute_url }}"><div class="date-tile"><div class="m">{{ e.start_at|date:"M"|upper }}</div><div class="d">{{ e.start_at|date:"d" }}</div></div><div class="grow"><div class="title">{{ e.title }}</div><div class="sub">{{ e.start_at|date:"H:i" }}</div></div></a>
-      {% empty %}<li class="text-muted">Rejalashtirilgan tadbirlar yo'q.</li>{% endfor %}</ul></div></div>
+      <div class="rowlist">{% for e in events %}<a href="{{ e.get_absolute_url }}"><div class="date-tile"><div class="m">{{ e.start_at|date:"M"|upper }}</div><div class="d">{{ e.start_at|date:"d" }}</div></div><div class="grow"><div class="title">{{ e.title }}</div><div class="sub">{{ e.start_at|date:"H:i" }}</div></div></a>
+      {% empty %}<div class="row-item text-muted">Rejalashtirilgan tadbirlar yo'q.</div>{% endfor %}</div></div></div>
   </div>
 </div>
 {% endblock %}

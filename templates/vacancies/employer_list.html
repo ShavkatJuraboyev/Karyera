@@ -9,7 +9,7 @@
   {% for v, l in statuses %}<a class="btn btn-sm {% if status == v %}btn-brand{% else %}btn-outline-secondary{% endif %}" href="?status={{ v }}">{{ l }}</a>{% endfor %}
 </div>
 <div class="panel"><div class="table-responsive"><table class="table table-hover">
-  <thead><tr><th>Lavozim</th><th>Holati</th><th>Muddat</th><th>Arizalar</th><th></th></tr></thead><tbody>
+  <thead><tr><th>Lavozim</th><th>Holati</th><th>Muddat</th><th>Arizalar</th><th><span class="visually-hidden">Amallar</span></th></tr></thead><tbody>
   {% for v in page %}
     <tr><td><a class="text-decoration-none fw-medium" href="{{ v.get_absolute_url }}">{{ v.title }}</a>{% if v.status == 'rejected' and v.moderation_comment %}<div class="small text-danger mt-1"><i class="bi bi-exclamation-circle me-1"></i>{{ v.moderation_comment }}</div>{% endif %}</td>
       <td><span class="badge text-bg-{{ v.status_badge }}">{{ v.get_status_display }}</span></td><td>{{ v.deadline|date:"d.m.Y" }}</td>

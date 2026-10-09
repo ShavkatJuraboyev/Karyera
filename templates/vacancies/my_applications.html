@@ -12,7 +12,7 @@
     <div class="vrow">
       <div class="logo-box">{% if a.vacancy.employer.logo %}<img src="{{ a.vacancy.employer.logo.url }}" alt="">{% else %}{{ a.vacancy.employer.name|slice:":1"|upper }}{% endif %}</div>
       <div class="flex-grow-1" style="min-width:0">
-        <h3 class="h6 mb-0"><a class="vtitle" href="{{ a.vacancy.get_absolute_url }}">{{ a.vacancy.title }}</a></h3>
+        <h2 class="h6 mb-0"><a class="vtitle" href="{{ a.vacancy.get_absolute_url }}">{{ a.vacancy.title }}</a></h2>
         <div class="vmeta"><span><i class="bi bi-building"></i>{{ a.vacancy.employer.name }}</span><span><i class="bi bi-calendar3"></i>Yuborilgan: {{ a.created_at|date:"d.m.Y" }}</span></div>
         {% if a.status == 'interview' and a.interview_at %}<div class="vchips"><span class="chip is-warn"><i class="bi bi-calendar-event"></i>Suhbat: {{ a.interview_at|date:"d.m.Y H:i" }}{% if a.interview_place %}, {{ a.interview_place }}{% endif %}</span></div>{% endif %}
         {% if a.employer_comment %}<div class="small mt-2 text-muted">Izoh: {{ a.employer_comment }}</div>{% endif %}

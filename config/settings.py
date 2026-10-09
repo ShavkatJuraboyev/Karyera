@@ -1,8 +1,9 @@
-"""“Karyera SIES” axborot tizimi — Django sozlamalari."""
+"""“Karyera” axborot tizimi — Django sozlamalari."""
 import os
 from pathlib import Path
- 
+
 BASE_DIR = Path(__file__).resolve().parent.parent
+
 
 def env_bool(name, default=False):
     value = os.environ.get(name)
@@ -174,7 +175,7 @@ if os.environ.get("EMAIL_HOST"):
     EMAIL_USE_TLS = env_bool("EMAIL_USE_TLS", True)
 else:
     EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"
-DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "karyera@sies.uz")
+DEFAULT_FROM_EMAIL = os.environ.get("DEFAULT_FROM_EMAIL", "karyera@gmail.uz")
 EMAIL_NOTIFICATIONS = env_bool("EMAIL_NOTIFICATIONS", True)
 TELEGRAM_BOT_TOKEN = os.environ.get("TELEGRAM_BOT_TOKEN", "")
 SMS_GATEWAY_URL = os.environ.get("SMS_GATEWAY_URL", "")  # kelgusida SMS shlyuzi uchun

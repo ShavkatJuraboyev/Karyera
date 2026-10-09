@@ -77,3 +77,13 @@ def initials(user):
     last = (getattr(user, "last_name", "") or "")[:1]
     value = (first + last) or (getattr(user, "username", "") or "?")[:1]
     return value.upper()
+
+
+@register.simple_tag(takes_context=True)
+def qs_remove(context, *keys):
+    """Joriy so'rov parametrlaridan berilgan kalitlarni (va sahifalashni) olib tashlaydi (filtr chiplari uchun)."""
+    params = context["request"].GET.copy()
+    for k in keys:
+        params.pop(k, None)
+    params.pop("page", None)
+    return params.urlencode()

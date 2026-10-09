@@ -1,7 +1,7 @@
 <div class="vrow{% if v.pk in applied_ids %} is-applied{% endif %}">
   <div class="logo-box">{% if v.employer.logo %}<img src="{{ v.employer.logo.url }}" alt="">{% else %}{{ v.employer.name|slice:":1"|upper }}{% endif %}</div>
   <div class="flex-grow-1" style="min-width:0">
-    <h3 class="h6 mb-0"><a class="vtitle" href="{{ v.get_absolute_url }}">{{ v.title }}</a></h3>
+    <h2 class="h6 mb-0"><a class="vtitle" href="{{ v.get_absolute_url }}">{{ v.title }}</a></h2>
     <div class="vmeta">
       <span><i class="bi bi-building"></i>{{ v.employer.name }}</span>
       <span><i class="bi bi-geo-alt"></i>{{ v.region }}</span>

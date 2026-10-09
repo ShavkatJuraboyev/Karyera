@@ -9,7 +9,7 @@
   <div class="col-md-2"><button class="btn btn-brand w-100">Qidirish</button></div>
 </form>
 <div class="panel"><div class="table-responsive"><table class="table table-hover">
-  <thead><tr><th>Tashkilot</th><th>STIR</th><th>Mas'ul shaxs</th><th>Vakansiyalar</th><th>Holati</th><th>Hamkorlik</th><th></th></tr></thead><tbody>
+  <thead><tr><th>Tashkilot</th><th>STIR</th><th>Mas'ul shaxs</th><th>Vakansiyalar</th><th>Holati</th><th>Hamkorlik</th><th><span class="visually-hidden">Amallar</span></th></tr></thead><tbody>
   {% for e in page %}
     <tr><td><div class="d-flex align-items-center gap-2"><div class="logo-box" style="width:36px;height:36px;font-size:.95rem;border-radius:9px">{{ e.name|slice:":1"|upper }}</div><div><a class="text-decoration-none fw-medium" href="{% url 'employers:manage_detail' e.pk %}">{{ e.name }}</a><div class="small text-muted">{{ e.region }}</div></div></div></td>
       <td class="tabular">{{ e.stir }}</td><td class="small">{{ e.contact_name }}<div class="text-muted">{{ e.contact_phone }}</div></td><td>{{ e.vacancy_count }}</td>

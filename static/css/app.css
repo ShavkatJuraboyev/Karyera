@@ -30,7 +30,7 @@
   --line-strong: #c3cddf;
   --ink: #14213d;
   --muted: #5b6b87;
-  --faint: #8794ab;
+  --faint: #66748e;
 
   --primary: #1b3a8f;
   --primary-hover: #142d73;
@@ -274,9 +274,11 @@ hr { border-color: var(--line); opacity: 1; }
 
 /* ---------- Qatorlar ro'yxati ---------- */
 .rowlist { list-style: none; margin: 0; padding: 0; }
-.rowlist > li, .rowlist > a { display: flex; align-items: center; gap: .9rem; padding: .85rem 1.25rem; border-top: 1px solid var(--line); color: inherit; text-decoration: none; }
+.rowlist > li, .rowlist > a, .rowlist > .row-item { display: flex; align-items: center; gap: .9rem; padding: .85rem 1.25rem; border-top: 1px solid var(--line); color: inherit; text-decoration: none; }
 .rowlist > :first-child { border-top: 0; }
 .rowlist > a:hover { background: var(--surface-2); }
+.rowlist > .row-item:has(> .empty) { display: block; padding: 0; }
+.rowlist > .row-item.text-muted { color: var(--muted); }
 .rowlist .grow { flex: 1; min-width: 0; }
 .rowlist .title { font-weight: 500; }
 .rowlist .sub { color: var(--muted); font-size: .85rem; }
@@ -372,7 +374,7 @@ hr { border-color: var(--line); opacity: 1; }
 .shell-body { padding: 1.75rem 1.25rem 3rem; }
 .shell-body .container { max-width: 1160px; padding-left: 0; padding-right: 0; }
 .shell-body .container.py-4, .shell-body .container.py-5 { padding-top: 0 !important; padding-bottom: 0 !important; }
-.shell-foot { padding: 1rem 1.25rem 1.5rem; color: var(--faint); font-size: .8rem; }
+.shell-foot { padding: 1rem 1.25rem 1.5rem; color: var(--muted); font-size: .8rem; }
 
 @media (min-width: 992px) {
   .shell { display: grid; grid-template-columns: 280px minmax(0, 1fr); min-height: 100vh; }
@@ -639,3 +641,101 @@ hr { border-color: var(--line); opacity: 1; }
 .table-responsive { -webkit-overflow-scrolling: touch; }
 .table td, .table th { min-width: 0; }
 .panel > .table-responsive { overflow-x: auto; }
+
+/* ==========================================================================
+   Pro qo'shimchalar: dialog, tezkor menyu, bildirishnoma menyusi, forma vositalari
+   ========================================================================== */
+kbd { font-family: var(--font-ui); font-size: .72rem; font-weight: 500; padding: .1rem .4rem; border-radius: 5px; background: var(--surface-2); border: 1px solid var(--line-strong); border-bottom-width: 2px; color: var(--muted); line-height: 1.4; }
+.kbd-hint { position: absolute; right: .5rem; top: 50%; transform: translateY(-50%); gap: .2rem; background: transparent; border: 0; padding: 0; align-items: center; }
+
+dialog.dlg { border: 0; padding: 0; border-radius: 18px; background: var(--surface); color: var(--ink); box-shadow: var(--shadow-float); width: min(440px, calc(100vw - 2rem)); max-height: calc(100vh - 3rem); overflow: hidden; }
+dialog.dlg::backdrop { background: rgba(9, 20, 52, .55); -webkit-backdrop-filter: blur(3px); backdrop-filter: blur(3px); }
+dialog.dlg[open] { animation: dlg-in .18s ease-out both; }
+@keyframes dlg-in { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: none; } }
+.dlg-body { padding: 1.6rem 1.6rem 1rem; text-align: center; }
+.dlg-icon { width: 52px; height: 52px; border-radius: 50%; margin: 0 auto 1rem; display: grid; place-items: center; font-size: 1.4rem; background: var(--t-danger); color: var(--i-danger); }
+.dlg-icon.is-info { background: var(--t-primary); color: var(--i-primary); }
+.dlg-body h2 { font-size: 1.2rem; margin-bottom: .4rem; }
+.dlg-body p { color: var(--muted); margin: 0; }
+.dlg-actions { display: flex; gap: .6rem; padding: 1rem 1.6rem 1.5rem; }
+.dlg-actions .btn { flex: 1; }
+
+dialog.palette { width: min(640px, calc(100vw - 1.5rem)); margin-top: 12vh; padding: 0; }
+.pal-search { display: flex; align-items: center; gap: .75rem; padding: .9rem 1.1rem; border-bottom: 1px solid var(--line); }
+.pal-search i { color: var(--faint); font-size: 1.1rem; }
+.pal-search input { flex: 1; border: 0; outline: 0; background: transparent; font-size: 1.05rem; color: var(--ink); min-width: 0; }
+.pal-search input::placeholder { color: var(--faint); }
+.pal-list { list-style: none; margin: 0; padding: .4rem; max-height: 52vh; overflow-y: auto; }
+.pal-group { padding: .6rem .75rem .25rem; font-size: .75rem; color: var(--muted); font-weight: 500; }
+.pal-item { display: flex; align-items: center; gap: .8rem; padding: .6rem .75rem; border-radius: 10px; cursor: pointer; }
+.pal-item i { width: 1.4rem; text-align: center; color: var(--muted); font-size: 1.05rem; }
+.pal-item .pal-label { display: flex; flex-direction: column; min-width: 0; }
+.pal-item .pal-label small { color: var(--muted); }
+.pal-item.active { background: var(--primary-soft); }
+.pal-item.active i { color: var(--primary); }
+.pal-empty { padding: 1.5rem; text-align: center; color: var(--muted); }
+.pal-foot { display: flex; flex-wrap: wrap; gap: .4rem 1.1rem; padding: .65rem 1.1rem; border-top: 1px solid var(--line); background: var(--surface-2); color: var(--muted); font-size: .78rem; }
+.pal-foot kbd { margin-right: .2rem; }
+
+/* Bildirishnoma menyusi */
+.notif-menu { width: min(380px, calc(100vw - 1.5rem)); padding: 0; overflow: hidden; }
+.notif-head { display: flex; justify-content: space-between; align-items: center; padding: .85rem 1rem; border-bottom: 1px solid var(--line); }
+.notif-item { display: flex; gap: .7rem; padding: .75rem 1rem; text-decoration: none; color: var(--ink); border-bottom: 1px solid var(--line); }
+.notif-item:hover { background: var(--surface-2); color: var(--ink); }
+.notif-item .n-dot { width: 8px; height: 8px; border-radius: 50%; background: transparent; margin-top: .45rem; flex-shrink: 0; }
+.notif-item.unread { background: color-mix(in srgb, var(--primary) 6%, var(--surface)); }
+.notif-item.unread .n-dot { background: var(--primary); }
+.notif-item .n-body { display: flex; flex-direction: column; min-width: 0; }
+.notif-item .n-title { font-weight: 500; }
+.notif-item .n-text { color: var(--muted); font-size: .85rem; }
+.notif-item .n-time { color: var(--faint); font-size: .75rem; margin-top: .15rem; }
+.notif-empty { padding: 1.5rem; text-align: center; color: var(--muted); }
+.notif-foot { display: block; text-align: center; padding: .75rem; font-weight: 500; text-decoration: none; background: var(--surface-2); }
+
+/* Forma vositalari */
+.pw-wrap { position: relative; }
+.pw-wrap .form-control { padding-right: 2.9rem; }
+.pw-toggle { position: absolute; right: .35rem; top: 50%; transform: translateY(-50%); width: 36px; height: 36px; border: 0; background: transparent; color: var(--muted); border-radius: 8px; }
+.pw-toggle:hover { background: var(--surface-2); color: var(--ink); }
+.file-note { margin-top: .5rem; display: flex; align-items: center; gap: .7rem; font-size: .82rem; color: var(--muted); }
+.file-note:empty { display: none; }
+.file-note.is-error { color: var(--i-danger); }
+.file-thumb { width: 56px; height: 56px; object-fit: cover; border-radius: 10px; border: 1px solid var(--line); }
+.ms { border: 1px solid var(--line-strong); border-radius: var(--radius-ctl); background: var(--surface); overflow: hidden; }
+.ms-search { border: 0 !important; border-bottom: 1px solid var(--line) !important; border-radius: 0 !important; box-shadow: none !important; }
+.ms-list { max-height: 220px; overflow-y: auto; padding: .35rem; }
+.ms-row { display: flex; align-items: center; gap: .6rem; padding: .45rem .6rem; border-radius: 8px; cursor: pointer; margin: 0; font-weight: 400; }
+.ms-row:hover { background: var(--surface-2); }
+.ms-row:has(input:checked) { background: var(--primary-soft); color: var(--primary); font-weight: 500; }
+.ms-count { padding: .5rem .85rem; border-top: 1px solid var(--line); font-size: .8rem; color: var(--muted); background: var(--surface-2); }
+
+/* Filtr chiplari */
+.active-filters { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1rem; }
+.fchip { display: inline-flex; align-items: center; gap: .35rem; padding: .25rem .4rem .25rem .7rem; border-radius: 999px; background: var(--primary-soft); color: var(--primary); font-size: .82rem; text-decoration: none; }
+.fchip:hover { background: color-mix(in srgb, var(--primary) 18%, var(--surface)); color: var(--primary); }
+.fchip i { width: 18px; height: 18px; display: grid; place-items: center; border-radius: 50%; font-size: .7rem; }
+.fchip:hover i { background: var(--primary); color: var(--on-primary); }
+
+/* Profil: keyingi qadamlar */
+.todo { list-style: none; margin: 0; padding: 0; }
+.todo li { display: flex; align-items: center; gap: .7rem; padding: .55rem 0; border-top: 1px solid var(--line); font-size: .9rem; }
+.todo li:first-child { border-top: 0; }
+.todo .ck { width: 22px; height: 22px; border-radius: 50%; border: 2px solid var(--line-strong); display: grid; place-items: center; font-size: .7rem; flex-shrink: 0; }
+.todo li.done .ck { background: var(--turq); border-color: var(--turq); color: #fff; }
+.todo li.done span.t { color: var(--muted); text-decoration: line-through; text-decoration-color: var(--line-strong); }
+.todo a { margin-left: auto; font-size: .82rem; font-weight: 500; text-decoration: none; white-space: nowrap; }
+
+/* Vakansiya qatori: ustiga olib borganda yo'naltiruvchi belgi */
+.vrow::after { content: "\F285"; font-family: "bootstrap-icons"; position: absolute; right: 1rem; top: 50%; transform: translate(-6px, -50%); opacity: 0; color: var(--primary); transition: opacity .15s, transform .15s; pointer-events: none; }
+.vrow:hover::after { opacity: 1; transform: translate(0, -50%); }
+.vrow .vside { transition: transform .15s; }
+.vrow:hover .vside { transform: translateX(-14px); }
+@media (max-width: 575.98px) { .vrow::after { display: none; } }
+
+/* Chop etish (jadval va hisobotlar) */
+@media print {
+  .filter-bar, .page-head .actions, .pagination, .crumb, .kbd-hint { display: none !important; }
+  .panel, .card { border: 1px solid #ccc; break-inside: avoid; }
+  .table thead th { background: #eee !important; color: #000 !important; }
+  a { color: inherit; text-decoration: none; }
+}
